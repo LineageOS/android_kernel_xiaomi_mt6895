@@ -13957,9 +13957,6 @@ int priv_driver_show_tr_info(IN struct net_device *prNetDev,
 
 	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
 
-	if (!netif_carrier_ok(prNetDev))
-		return -1;
-
 	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
 	kalIoctl(prGlueInfo, wlanoidShowPdmaInfo, (void *) pcCommand,
 		 i4TotalLen, FALSE, FALSE, TRUE, &i4BytesWritten);
@@ -13976,9 +13973,6 @@ int priv_driver_show_ple_info(IN struct net_device *prNetDev,
 	ASSERT(prNetDev);
 
 	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
-
-	if (!netif_carrier_ok(prNetDev))
-		return -1;
 
 	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
 	kalIoctl(prGlueInfo, wlanoidShowPleInfo, (void *) pcCommand,
@@ -13997,9 +13991,6 @@ int priv_driver_show_pse_info(IN struct net_device *prNetDev,
 
 	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
 
-	if (!netif_carrier_ok(prNetDev))
-		return -1;
-
 	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
 	kalIoctl(prGlueInfo, wlanoidShowPseInfo, (void *) pcCommand,
 		 i4TotalLen, FALSE, FALSE, TRUE, &i4BytesWritten);
@@ -14017,9 +14008,6 @@ int priv_driver_show_csr_info(IN struct net_device *prNetDev,
 
 	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
 
-	if (!netif_carrier_ok(prNetDev))
-		return -1;
-
 	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
 	kalIoctl(prGlueInfo, wlanoidShowCsrInfo, (void *) pcCommand,
 		 i4TotalLen, FALSE, FALSE, TRUE, &i4BytesWritten);
@@ -14036,9 +14024,6 @@ int priv_driver_show_dmasch_info(IN struct net_device *prNetDev,
 	ASSERT(prNetDev);
 
 	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
-
-	if (!netif_carrier_ok(prNetDev))
-		return -1;
 
 	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
 	kalIoctl(prGlueInfo, wlanoidShowDmaschInfo, (void *) pcCommand,
@@ -14058,9 +14043,6 @@ int priv_driver_fw_param(IN struct net_device *prNetDev,
 
 	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
 
-	if (!netif_carrier_ok(prNetDev))
-		return -1;
-
 	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
 	kalIoctl(prGlueInfo, wlanoidSetFwParam, (void *) (pcCommand + 13),
 		 i4TotalLen - 13, FALSE, FALSE, FALSE, &i4BytesWritten);
@@ -14078,9 +14060,6 @@ int priv_driver_tspec_operation(IN struct net_device *prNetDev,
 	ASSERT(prNetDev);
 
 	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
-
-	if (!netif_carrier_ok(prNetDev))
-		return -1;
 
 	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
 	kalIoctl(prGlueInfo, wlanoidTspecOperation, (void *) pcCommand,
