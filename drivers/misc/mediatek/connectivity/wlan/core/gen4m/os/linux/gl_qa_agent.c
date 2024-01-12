@@ -9614,6 +9614,7 @@ int priv_qa_agent(IN struct net_device *prNetDev,
 		  IN union iwreq_data *prIwReqData, IN char *pcExtra)
 {
 	int32_t i4Status = 0;
+#if BUILD_QA_DBG
 	struct HQA_CMD_FRAME *HqaCmdFrame;
 	uint32_t u4ATEMagicNum, u4ATEId, u4ATEData;
 	struct GLUE_INFO *prGlueInfo = NULL;
@@ -9711,6 +9712,9 @@ int priv_qa_agent(IN struct net_device *prNetDev,
 ERROR1:
 	kfree(HqaCmdFrame);
 ERROR0:
+#else
+	DBGLOG(REQ, WARN, "not support in user load");
+#endif /* BUILD_QA_DBG */
 	return i4Status;
 }
 #endif

@@ -186,8 +186,6 @@ int priv_driver_set_pwr_temp(
 	IN struct net_device *prNetDev, IN char *pcCommand, IN int i4TotalLen);
 #endif
 
-int priv_driver_set_multista_use_case(
-	IN struct net_device *prNetDev, IN char *pcCommand, IN int i4TotalLen);
 /*******************************************************************************
  *                       P R I V A T E   D A T A
  *******************************************************************************
@@ -1051,6 +1049,7 @@ priv_set_int(IN struct net_device *prNetDev,
 	     IN struct iw_request_info *prIwReqInfo,
 	     IN union iwreq_data *prIwReqData, IN OUT char *pcExtra)
 {
+#if BUILD_QA_DBG
 	DBGLOG(REQ, LOUD, "cmd=%x, flags=%x\n",
 	     prIwReqInfo->cmd, prIwReqInfo->flags);
 	DBGLOG(REQ, LOUD, "mode=%x, flags=%x\n",
@@ -1058,6 +1057,10 @@ priv_set_int(IN struct net_device *prNetDev,
 
 	return compat_priv(prNetDev, prIwReqInfo,
 	     prIwReqData, pcExtra, __priv_set_int);
+#else
+	DBGLOG(REQ, WARN, "not support in user load");
+	return 0;
+#endif
 }
 
 /*----------------------------------------------------------------------------*/
@@ -1311,6 +1314,7 @@ priv_get_int(IN struct net_device *prNetDev,
 	     IN struct iw_request_info *prIwReqInfo,
 	     IN union iwreq_data *prIwReqData, IN OUT char *pcExtra)
 {
+#if BUILD_QA_DBG
 	DBGLOG(REQ, LOUD, "cmd=%x, flags=%x\n",
 	     prIwReqInfo->cmd, prIwReqInfo->flags);
 	DBGLOG(REQ, LOUD, "mode=%x, flags=%x\n",
@@ -1318,45 +1322,10 @@ priv_get_int(IN struct net_device *prNetDev,
 
 	return compat_priv(prNetDev, prIwReqInfo,
 	     prIwReqData, pcExtra, __priv_get_int);
-}
-
-/*----------------------------------------------------------------------------*/
-/*!
- * \brief Private ioctl set int array handler.
- *
- * \param[in] prNetDev Net device requested.
- * \param[in] prIwReqInfo Pointer to iwreq structure.
- * \param[in] prIwReqData The ioctl data structure, use the field of
- *            sub-command.
- * \param[in] pcExtra The buffer with input value
- *
- * \retval 0 For success.
- * \retval -EOPNOTSUPP If cmd is not supported.
- * \retval -EINVAL If a value is out of range.
- *
- */
-/*----------------------------------------------------------------------------*/
-int
-__priv_set_ints(IN struct net_device *prNetDev,
-	      IN struct iw_request_info *prIwReqInfo,
-	      IN union iwreq_data *prIwReqData, IN char *pcExtra)
-{
-	DBGLOG(REQ, LOUD, "not support now");
-	return -EINVAL;
-}				/* __priv_set_ints */
-
-int
-priv_set_ints(IN struct net_device *prNetDev,
-	     IN struct iw_request_info *prIwReqInfo,
-	     IN union iwreq_data *prIwReqData, IN OUT char *pcExtra)
-{
-	DBGLOG(REQ, LOUD, "cmd=%x, flags=%x\n",
-	     prIwReqInfo->cmd, prIwReqInfo->flags);
-	DBGLOG(REQ, LOUD, "mode=%x, flags=%x\n",
-	     prIwReqData->mode, prIwReqData->data.flags);
-
-	return compat_priv(prNetDev, prIwReqInfo,
-	     prIwReqData, pcExtra, __priv_set_ints);
+#else
+	DBGLOG(REQ, WARN, "not support in user load");
+	return 0;
+#endif
 }
 
 /*----------------------------------------------------------------------------*/
@@ -1442,6 +1411,7 @@ priv_get_ints(IN struct net_device *prNetDev,
 	     IN struct iw_request_info *prIwReqInfo,
 	     IN union iwreq_data *prIwReqData, IN OUT char *pcExtra)
 {
+#if BUILD_QA_DBG
 	DBGLOG(REQ, LOUD, "cmd=%x, flags=%x\n",
 	     prIwReqInfo->cmd, prIwReqInfo->flags);
 	DBGLOG(REQ, LOUD, "mode=%x, flags=%x\n",
@@ -1449,6 +1419,10 @@ priv_get_ints(IN struct net_device *prNetDev,
 
 	return compat_priv(prNetDev, prIwReqInfo,
 	    prIwReqData, pcExtra, __priv_get_ints);
+#else
+	DBGLOG(REQ, WARN, "not support in user load");
+	return 0;
+#endif
 }
 
 /*----------------------------------------------------------------------------*/
@@ -1728,6 +1702,7 @@ priv_set_struct(IN struct net_device *prNetDev,
 	     IN struct iw_request_info *prIwReqInfo,
 	     IN union iwreq_data *prIwReqData, IN OUT char *pcExtra)
 {
+#if BUILD_QA_DBG
 	DBGLOG(REQ, LOUD, "cmd=%x, flags=%x\n",
 	     prIwReqInfo->cmd, prIwReqInfo->flags);
 	DBGLOG(REQ, LOUD, "mode=%x, flags=%x\n",
@@ -1735,6 +1710,10 @@ priv_set_struct(IN struct net_device *prNetDev,
 
 	return compat_priv(prNetDev, prIwReqInfo,
 	     prIwReqData, pcExtra, __priv_set_struct);
+#else
+	DBGLOG(REQ, WARN, "not support in user load");
+	return 0;
+#endif
 }
 
 /*----------------------------------------------------------------------------*/
@@ -1887,6 +1866,7 @@ priv_get_struct(IN struct net_device *prNetDev,
 	     IN struct iw_request_info *prIwReqInfo,
 	     IN union iwreq_data *prIwReqData, IN OUT char *pcExtra)
 {
+#if BUILD_QA_DBG
 	DBGLOG(REQ, LOUD, "cmd=%x, flags=%x\n",
 	     prIwReqInfo->cmd, prIwReqInfo->flags);
 	DBGLOG(REQ, LOUD, "mode=%x, flags=%x\n",
@@ -1894,6 +1874,10 @@ priv_get_struct(IN struct net_device *prNetDev,
 
 	return compat_priv(prNetDev, prIwReqInfo,
 	     prIwReqData, pcExtra, __priv_get_struct);
+#else
+	DBGLOG(REQ, WARN, "not support in user load");
+	return 0;
+#endif
 }
 
 #if CFG_SUPPORT_NAN
@@ -2741,6 +2725,7 @@ priv_ate_set(IN struct net_device *prNetDev,
 	     IN struct iw_request_info *prIwReqInfo,
 	     IN union iwreq_data *prIwReqData, IN OUT char *pcExtra)
 {
+#if BUILD_QA_DBG
 	DBGLOG(REQ, LOUD, "cmd=%x, flags=%x\n",
 	     prIwReqInfo->cmd, prIwReqInfo->flags);
 	DBGLOG(REQ, LOUD, "mode=%x, flags=%x\n",
@@ -2748,6 +2733,10 @@ priv_ate_set(IN struct net_device *prNetDev,
 
 	return compat_priv(prNetDev, prIwReqInfo,
 	     prIwReqData, pcExtra, __priv_ate_set);
+#else
+	DBGLOG(REQ, WARN, "not support in user load");
+	return 0;
+#endif
 }
 #endif
 
@@ -2791,6 +2780,7 @@ priv_get_string(IN struct net_device *prNetDev,
 		IN struct iw_request_info *prIwReqInfo,
 		IN union iwreq_data *prIwReqData, IN OUT char *pcExtra)
 {
+#if BUILD_QA_DBG
 	uint32_t u4SubCmd = 0;
 	uint32_t u4TotalLen = 2000;
 	struct GLUE_INFO *prGlueInfo = NULL;
@@ -3172,6 +3162,9 @@ priv_get_string(IN struct net_device *prNetDev,
 	} else if (pos == 0) {
 		prIwReqData->data.length = pos;
 	}
+#else
+	DBGLOG(REQ, WARN, "not support in user load");
+#endif
 	return 0;
 
 }
@@ -3659,164 +3652,6 @@ int priv_driver_get_rx_statistics(IN struct net_device *prNetDev,
 #endif /* CFG_SUPPORT_QA_TOOL */
 
 #if CFG_SUPPORT_MSP
-#if 0
-int priv_driver_get_stat(IN struct net_device
-			*prNetDev, IN char *pcCommand, IN int i4TotalLen)
-{
-	struct GLUE_INFO *prGlueInfo = NULL;
-	uint32_t rStatus = WLAN_STATUS_SUCCESS;
-	uint32_t u4BufLen = 0;
-	int32_t i4BytesWritten = 0;
-	int32_t i4Argc = 0;
-	int8_t *apcArgv[WLAN_CFG_ARGV_MAX] = { 0 };
-	int32_t i4ArgNum = 2;
-	struct PARAM_GET_STA_STATISTICS rQueryStaStatistics;
-	int32_t rRssi;
-	uint16_t u2LinkSpeed;
-	uint32_t u4Per;
-	UINTT_8 i;
-
-	ASSERT(prNetDev);
-
-	if (GLUE_CHK_PR2(prNetDev, pcCommand) == FALSE)
-		return -1;
-
-	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
-
-	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
-	wlanCfgParseArgument(pcCommand, &i4Argc, apcArgv);
-	DBGLOG(REQ, LOUD, "argc is %i\n", i4Argc);
-
-	kalMemZero(&rQueryStaStatistics,
-		   sizeof(rQueryStaStatistics));
-
-	if (i4Argc >= i4ArgNum) {
-		wlanHwAddrToBin(apcArgv[1],
-				&rQueryStaStatistics.aucMacAddr[0]);
-
-		rQueryStaStatistics.ucReadClear = TRUE;
-
-		rStatus = kalIoctl(prGlueInfo, wlanoidQueryStaStatistics,
-				   &rQueryStaStatistics,
-				   sizeof(rQueryStaStatistics),
-				   TRUE, FALSE, TRUE, &u4BufLen);
-
-		if (rStatus == WLAN_STATUS_SUCCESS) {
-			rRssi = RCPI_TO_dBm(rQueryStaStatistics.ucRcpi);
-			u2LinkSpeed = rQueryStaStatistics.u2LinkSpeed == 0 ? 0 :
-				      rQueryStaStatistics.u2LinkSpeed / 2;
-
-			i4BytesWritten = kalSnprintf(pcCommand, i4TotalLen,
-				"%s", "\n\nSTA Stat:\n");
-
-			i4BytesWritten += kalSnprintf(
-				pcCommand + i4BytesWritten,
-				i4TotalLen - i4BytesWritten,
-				"CurrentTemperature            = %d\n", 0);
-			i4BytesWritten += kalSnprintf(
-				pcCommand + i4BytesWritten,
-				i4TotalLen - i4BytesWritten,
-				"Tx success                    = %lu\n", 0);
-			i4BytesWritten += kalSnprintf(
-				pcCommand + i4BytesWritten,
-				i4TotalLen - i4BytesWritten,
-				"Tx fail count                 = %ld, PER=%ld.%1ld%%\n",
-				0, 0, 0);
-			i4BytesWritten += kalSnprintf(
-				pcCommand + i4BytesWritten,
-				i4TotalLen - i4BytesWritten,
-				"Rx success                    = %lu\n", 0);
-			i4BytesWritten += kalSnprintf(
-				pcCommand + i4BytesWritten,
-				i4TotalLen - i4BytesWritten,
-				"Rx with CRC                   = %ld, PER=%ld.%1ld%%\n",
-				0, 0, 0);
-			i4BytesWritten += kalSnprintf(
-				pcCommand + i4BytesWritten,
-				i4TotalLen - i4BytesWritten,
-				"Rx with PhyErr                = %lu\n", 0);
-			i4BytesWritten += kalSnprintf(
-				pcCommand + i4BytesWritten,
-				i4TotalLen - i4BytesWritten,
-				"Rx with PlcpErr               = %lu\n", 0);
-			i4BytesWritten += kalSnprintf(
-				pcCommand + i4BytesWritten,
-				i4TotalLen - i4BytesWritten,
-				"Rx drop due to out of resource= %lu\n", 0);
-			i4BytesWritten += kalSnprintf(
-				pcCommand + i4BytesWritten,
-				i4TotalLen - i4BytesWritten,
-				"Rx duplicate frame            = %lu\n", 0);
-			i4BytesWritten += kalSnprintf(
-				pcCommand + i4BytesWritten,
-				i4TotalLen - i4BytesWritten,
-				"False CCA                     = %lu\n", 0);
-			i4BytesWritten += kalSnprintf(
-				pcCommand + i4BytesWritten,
-				i4TotalLen - i4BytesWritten,
-				"RSSI                          = %d %d %d %d\n",
-				0, 0, 0, 0);
-			i4BytesWritten += kalSnprintf(
-				pcCommand + i4BytesWritten,
-				i4TotalLen - i4BytesWritten,
-				"Last TX Rate	       = %s, %s, %s, %s, %s\n",
-				"NA", "NA", "NA", "NA", "NA");
-			i4BytesWritten += kalSnprintf(
-				pcCommand + i4BytesWritten,
-				i4TotalLen - i4BytesWritten,
-				"Last RX Rate	       = %s, %s, %s, %s, %s\n",
-				"NA", "NA", "NA", "NA", "NA");
-
-			for (i = 0; i < 2 /* band num */; i++) {
-				i4BytesWritten += kalSnprintf(
-					pcCommand + i4BytesWritten,
-					i4TotalLen - i4BytesWritten,
-					"BandIdx:	       = %d\n", i);
-				i4BytesWritten += kalSnprintf(
-					pcCommand + i4BytesWritten,
-					i4TotalLen - i4BytesWritten, "%s",
-					"\tRange:  1   2~5   6~15   16~22   23~33   34~49   50~57   58~64\n"
-					);
-				i4BytesWritten += kalSnprintf(
-					pcCommand + i4BytesWritten,
-					i4TotalLen - i4BytesWritten,
-					"\t\t%d \t%d \t%d \t%d \t%d \t%d \t%d \t%d\n",
-					0, 0, 0, 0, 0, 0, 0, 0);
-			}
-			i4BytesWritten += kalSnprintf(
-				pcCommand + i4BytesWritten,
-				i4TotalLen - i4BytesWritten,
-				"Tx success	       = %ld\n",
-				rQueryStaStatistics.u4TransmitCount -
-				    rQueryStaStatistics.u4TransmitFailCount);
-
-			u4Per = rQueryStaStatistics.u4TransmitFailCount == 0 ?
-			    0 :
-			    (1000 * (rQueryStaStatistics.u4TransmitFailCount))
-				/ rQueryStaStatistics.u4TransmitCount;
-			i4BytesWritten += kalSnprintf(
-				pcCommand + i4BytesWritten,
-				i4TotalLen - i4BytesWritten,
-				"Tx fail count	       = %ld, PER=%ld.%1ld%%\n",
-				rQueryStaStatistics.u4TransmitFailCount,
-				u4Per / 10, u4Per % 10);
-
-			i4BytesWritten += kalSnprintf(
-				pcCommand + i4BytesWritten,
-				i4TotalLen - i4BytesWritten,
-				"RSSI		       = %d\n", rRssi);
-			i4BytesWritten += kalSnprintf(
-				pcCommand + i4BytesWritten,
-				i4TotalLen - i4BytesWritten,
-				"LinkSpeed	       = %d\n", u2LinkSpeed);
-		}
-	} else
-		i4BytesWritten = kalSnprintf(pcCommand, i4TotalLen, "%s",
-					     "\n\nNo STA Stat:\n");
-
-	return i4BytesWritten;
-}
-#endif
 
 
 int priv_driver_get_sta_statistics(
@@ -6159,373 +5994,7 @@ out:
 	return i4BytesWritten;
 }
 
-static int32_t priv_driver_dump_stat2_info(struct ADAPTER *prAdapter,
-			IN char *pcCommand, IN int i4TotalLen,
-			struct UMAC_STAT2_GET *prUmacStat2GetInfo,
-			struct PARAM_GET_DRV_STATISTICS *prQueryDrvStatistics)
-{
-	int32_t i4BytesWritten = 0;
-	uint16_t u2PleTotalRevPage = 0;
-	uint16_t u2PleTotalSrcPage = 0;
-	uint16_t u2PseTotalRevPage = 0;
-	uint16_t u2PseTotalSrcPage = 0;
 
-	u2PleTotalRevPage = prUmacStat2GetInfo->u2PleRevPgHif0Group0 +
-		prUmacStat2GetInfo->u2PleRevPgCpuGroup2;
-
-	u2PleTotalSrcPage = prUmacStat2GetInfo->u2PleSrvPgHif0Group0 +
-		prUmacStat2GetInfo->u2PleSrvPgCpuGroup2;
-
-	u2PseTotalRevPage = prUmacStat2GetInfo->u2PseRevPgHif0Group0 +
-		prUmacStat2GetInfo->u2PseRevPgHif1Group1 +
-		prUmacStat2GetInfo->u2PseRevPgCpuGroup2 +
-		prUmacStat2GetInfo->u2PseRevPgLmac0Group3 +
-		prUmacStat2GetInfo->u2PseRevPgLmac1Group4 +
-		prUmacStat2GetInfo->u2PseRevPgLmac2Group5 +
-		prUmacStat2GetInfo->u2PseRevPgPleGroup6;
-
-	u2PseTotalSrcPage = prUmacStat2GetInfo->u2PseSrvPgHif0Group0 +
-		prUmacStat2GetInfo->u2PseSrvPgHif1Group1 +
-		prUmacStat2GetInfo->u2PseSrvPgCpuGroup2 +
-		prUmacStat2GetInfo->u2PseSrvPgLmac0Group3 +
-		prUmacStat2GetInfo->u2PseSrvPgLmac1Group4 +
-		prUmacStat2GetInfo->u2PseSrvPgLmac2Group5 +
-		prUmacStat2GetInfo->u2PseSrvPgPleGroup6;
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%s", "\n----- Stat2 Info -----\n");
-
-
-	/* Rev Page number Info. */
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%s", "\n----- PLE Reservation Page Info. -----\n");
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Ple Hif0 Group0 RevPage", " = ",
-			prUmacStat2GetInfo->u2PleRevPgHif0Group0);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Ple Cpu Group2 RevPage", " = ",
-			prUmacStat2GetInfo->u2PleRevPgCpuGroup2);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Ple Total RevPage", " = ",
-			u2PleTotalRevPage);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%s", "\n----- PLE Source Page Info. ----------\n");
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Ple Hif0 Group0 SrcPage", " = ",
-			prUmacStat2GetInfo->u2PleSrvPgHif0Group0);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Ple Cpu Group2 SrcPage", " = ",
-			prUmacStat2GetInfo->u2PleSrvPgCpuGroup2);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Ple Total SrcPage", " = ",
-			u2PleTotalSrcPage);
-
-	/* umac MISC Info. */
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%s", "\n----- PLE Misc Info. -----------------\n");
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "ple Total Page Number", " = ",
-			prUmacStat2GetInfo->u2PleTotalPageNum);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "ple Free Page Number", " = ",
-			prUmacStat2GetInfo->u2PleFreePageNum);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "ple FFA Page Number", " = ",
-			prUmacStat2GetInfo->u2PleFfaNum);
-
-	/* PSE Info. */
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%s", "\n----- PSE Reservation Page Info. -----\n");
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pse Hif0 Group0 RevPage", " = ",
-			prUmacStat2GetInfo->u2PseRevPgHif0Group0);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pse Hif1 Group1 RevPage", " = ",
-			prUmacStat2GetInfo->u2PseRevPgHif1Group1);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pse Cpu Group2 RevPage", " = ",
-			prUmacStat2GetInfo->u2PseRevPgCpuGroup2);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pse Lmac0 Group3 RevPage", " = ",
-			prUmacStat2GetInfo->u2PseRevPgLmac0Group3);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pse Lmac1 Group4 RevPage", " = ",
-			prUmacStat2GetInfo->u2PseRevPgLmac1Group4);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pse Lmac2 Group5 RevPage", " = ",
-			prUmacStat2GetInfo->u2PseRevPgLmac2Group5);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pse Ple Group6 RevPage", " = ",
-			prUmacStat2GetInfo->u2PseRevPgPleGroup6);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pse Total RevPage", " = ",
-			u2PseTotalRevPage);
-
-	/* PSE Info. */
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%s", "\n----- PSE Source Page Info. ----------\n");
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pse Hif0 Group0 SrcPage", " = ",
-			prUmacStat2GetInfo->u2PseSrvPgHif0Group0);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pse Hif1 Group1 SrcPage", " = ",
-			prUmacStat2GetInfo->u2PseSrvPgHif1Group1);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pse Cpu Group2 SrcPage", " = ",
-			prUmacStat2GetInfo->u2PseSrvPgCpuGroup2);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pse Lmac0 Group3 SrcPage", " = ",
-			prUmacStat2GetInfo->u2PseSrvPgLmac0Group3);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pse Lmac1 Group4 SrcPage", " = ",
-			prUmacStat2GetInfo->u2PseSrvPgLmac1Group4);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pse Lmac2 Group5 SrcPage", " = ",
-			prUmacStat2GetInfo->u2PseSrvPgLmac2Group5);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pse Ple Group6 SrcPage", " = ",
-			prUmacStat2GetInfo->u2PseSrvPgPleGroup6);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pse Total SrcPage", " = ",
-			u2PseTotalSrcPage);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%s", "\n----- PSE Misc Info. -----------------\n");
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "pse Total Page Number", " = ",
-			prUmacStat2GetInfo->u2PseTotalPageNum);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "pse Free Page Number", " = ",
-			prUmacStat2GetInfo->u2PseFreePageNum);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "pse FFA Page Number", " = ",
-			prUmacStat2GetInfo->u2PseFfaNum);
-
-
-	/* driver info */
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%s", "\n\n----- DRV Stat -----------------------\n\n");
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pending Data", " = ",
-			prQueryDrvStatistics->i4TxPendingFrameNum);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Pending Sec", " = ",
-			prQueryDrvStatistics->i4TxPendingSecurityFrameNum);
-#if 0
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%s\n", "Tx Pending Cmd Number", " = ",
-			prQueryDrvStatistics->i4TxPendingCmdNum);
-#endif
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Tx Pending For-pkt Number", " = ",
-			prQueryDrvStatistics->i4PendingFwdFrameCount);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "MsduInfo Available Number", " = ",
-			prQueryDrvStatistics->u4MsduNumElem);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "MgmtTxRing Pending Number", " = ",
-			prQueryDrvStatistics->u4TxMgmtTxringQueueNumElem);
-
-	/* Driver Rx Info. */
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Rx Free Sw Rfb Number", " = ",
-			prQueryDrvStatistics->u4RxFreeSwRfbMsduNumElem);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Rx Received Sw Rfb Number", " = ",
-			prQueryDrvStatistics->u4RxReceivedRfbNumElem);
-
-	i4BytesWritten += kalSnprintf(pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"%-26s%s%d\n", "Rx Indicated Sw Rfb Number", " = ",
-			prQueryDrvStatistics->u4RxIndicatedNumElem);
-
-	return i4BytesWritten;
-}
-
-int priv_driver_get_sta_stat2(IN struct net_device *prNetDev,
-				     IN char *pcCommand, IN int i4TotalLen)
-{
-	int32_t i4BytesWritten = 0;
-	struct GLUE_INFO *prGlueInfo = NULL;
-	struct ADAPTER *prAdapter = NULL;
-	int32_t i4Argc = 0;
-	int8_t *apcArgv[WLAN_CFG_ARGV_MAX] = {0};
-	int32_t i4ArgNum = 1;
-	struct UMAC_STAT2_GET *prUmacStat2GetInfo;
-	struct PARAM_GET_DRV_STATISTICS *prQueryDrvStatistics;
-	struct QUE *prQueList, *prTxMgmtTxRingQueList;
-	struct RX_CTRL *prRxCtrl;
-
-	KAL_SPIN_LOCK_DECLARATION();
-
-	ASSERT(prNetDev);
-	if (GLUE_CHK_PR2(prNetDev, pcCommand) == FALSE)
-		return -1;
-
-	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
-	prAdapter = prGlueInfo->prAdapter;
-
-
-	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
-	wlanCfgParseArgument(pcCommand, &i4Argc, apcArgv);
-	DBGLOG(REQ, LOUD, "argc is %i\n", i4Argc);
-
-	if (i4Argc < i4ArgNum)
-		return -1;
-
-	prQueList = &prAdapter->rTxCtrl.rFreeMsduInfoList;
-
-	prTxMgmtTxRingQueList = &prAdapter->rTxCtrl.rTxMgmtTxingQueue;
-
-	prRxCtrl = &prAdapter->rRxCtrl;
-	ASSERT(prRxCtrl);
-
-	/* to do for UMAC Dump */
-	prUmacStat2GetInfo = (struct UMAC_STAT2_GET *)kalMemAlloc(
-				sizeof(struct UMAC_STAT2_GET), VIR_MEM_TYPE);
-	if (prUmacStat2GetInfo == NULL)
-		return -1;
-
-	halUmacInfoGetMiscStatus(prAdapter, prUmacStat2GetInfo);
-
-
-	/* Get Driver stat info */
-	prQueryDrvStatistics =
-		(struct PARAM_GET_DRV_STATISTICS *)kalMemAlloc(sizeof(
-				struct PARAM_GET_DRV_STATISTICS), VIR_MEM_TYPE);
-	if (prQueryDrvStatistics == NULL) {
-		kalMemFree(prUmacStat2GetInfo, VIR_MEM_TYPE,
-			   sizeof(struct UMAC_STAT2_GET));
-		return -1;
-	}
-
-	prQueryDrvStatistics->i4TxPendingFrameNum =
-		(uint32_t) GLUE_GET_REF_CNT(prGlueInfo->i4TxPendingFrameNum);
-	prQueryDrvStatistics->i4TxPendingSecurityFrameNum =
-		(uint32_t) GLUE_GET_REF_CNT(
-				prGlueInfo->i4TxPendingSecurityFrameNum);
-#if 0
-	prQueryDrvStatistics->i4TxPendingCmdNum =
-		(uint32_t) GLUE_GET_REF_CNT(prGlueInfo->i4TxPendingCmdNum);
-#endif
-
-	prQueryDrvStatistics->i4PendingFwdFrameCount =
-				prAdapter->rTxCtrl.i4PendingFwdFrameCount;
-
-	KAL_ACQUIRE_SPIN_LOCK(prAdapter, SPIN_LOCK_TX_MSDU_INFO_LIST);
-	prQueryDrvStatistics->u4MsduNumElem = prQueList->u4NumElem;
-	KAL_RELEASE_SPIN_LOCK(prAdapter, SPIN_LOCK_TX_MSDU_INFO_LIST);
-
-	KAL_ACQUIRE_SPIN_LOCK(prAdapter, SPIN_LOCK_TXING_MGMT_LIST);
-	prQueryDrvStatistics->u4TxMgmtTxringQueueNumElem =
-					prTxMgmtTxRingQueList->u4NumElem;
-	KAL_RELEASE_SPIN_LOCK(prAdapter, SPIN_LOCK_TXING_MGMT_LIST);
-
-
-	KAL_ACQUIRE_SPIN_LOCK(prAdapter, SPIN_LOCK_RX_FREE_QUE);
-	prQueryDrvStatistics->u4RxFreeSwRfbMsduNumElem =
-					prRxCtrl->rFreeSwRfbList.u4NumElem;
-	KAL_RELEASE_SPIN_LOCK(prAdapter, SPIN_LOCK_RX_FREE_QUE);
-
-	KAL_ACQUIRE_SPIN_LOCK(prAdapter, SPIN_LOCK_RX_QUE);
-	prQueryDrvStatistics->u4RxReceivedRfbNumElem =
-					prRxCtrl->rReceivedRfbList.u4NumElem;
-	KAL_RELEASE_SPIN_LOCK(prAdapter, SPIN_LOCK_RX_QUE);
-
-	KAL_ACQUIRE_SPIN_LOCK(prAdapter, SPIN_LOCK_RX_FREE_QUE);
-	prQueryDrvStatistics->u4RxIndicatedNumElem =
-					prRxCtrl->rIndicatedRfbList.u4NumElem;
-	KAL_RELEASE_SPIN_LOCK(prAdapter, SPIN_LOCK_RX_FREE_QUE);
-
-	i4BytesWritten = priv_driver_dump_stat2_info(prAdapter, pcCommand,
-			i4TotalLen, prUmacStat2GetInfo, prQueryDrvStatistics);
-
-	kalMemFree(prUmacStat2GetInfo, VIR_MEM_TYPE,
-		   sizeof(struct UMAC_STAT2_GET));
-	kalMemFree(prQueryDrvStatistics, VIR_MEM_TYPE,
-		   sizeof(struct PARAM_GET_DRV_STATISTICS));
-
-	return i4BytesWritten;
-}
 
 
 static int32_t priv_driver_dump_rx_stat_info(struct ADAPTER *prAdapter,
@@ -10335,12 +9804,12 @@ priv_set_ap(IN struct net_device *prNetDev,
 	IN struct iw_request_info *prIwReqInfo,
 	IN union iwreq_data *prIwReqData, IN OUT char *pcExtra)
 {
-#if 0
-	return compat_priv(prNetDev, prIwReqInfo,
-		prIwReqData, pcExtra, __priv_set_ap);
-#else
+#if BUILD_QA_DBG
 	return __priv_set_ap(prNetDev, prIwReqInfo,
 		prIwReqData, pcExtra);
+#else
+	DBGLOG(REQ, WARN, "not support in user load");
+	return 0;
 #endif
 }
 
@@ -12767,53 +12236,6 @@ cccr_op_invalid:
 #endif /* _HIF_SDIO && (MTK_WCN_HIF_SDIO == 0) */
 
 #if CFG_SUPPORT_ADVANCE_CONTROL
-int priv_driver_set_noise(IN struct net_device *prNetDev,
-				 IN char *pcCommand, IN int i4TotalLen)
-{
-	struct GLUE_INFO *prGlueInfo = NULL;
-	uint32_t rStatus = WLAN_STATUS_SUCCESS;
-	uint32_t u4BufLen = 0;
-	int32_t i4BytesWritten = 0;
-	int32_t i4Argc = 0;
-	int8_t *apcArgv[WLAN_CFG_ARGV_MAX] = { 0 };
-	int32_t u4Ret = 0;
-	uint32_t u4Id = CMD_SW_DBGCTL_ADVCTL_SET_ID + 1;
-	uint32_t u4Sel = 0;
-	struct PARAM_CUSTOM_SW_CTRL_STRUCT rSwCtrlInfo;
-
-	ASSERT(prNetDev);
-	if (GLUE_CHK_PR2(prNetDev, pcCommand) == FALSE)
-		return -1;
-	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
-
-	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
-	wlanCfgParseArgument(pcCommand, &i4Argc, apcArgv);
-	DBGLOG(REQ, LOUD, "argc is %i\n", i4Argc);
-
-	rSwCtrlInfo.u4Id = u4Id;
-
-	if (i4Argc <= 1) {
-		DBGLOG(REQ, ERROR, "Argc(%d) ERR: SET_NOISE <Sel>\n", i4Argc);
-		return -1;
-	}
-
-	u4Ret = kalkStrtou32(apcArgv[1], 0, &u4Sel);
-	if (u4Ret)
-		DBGLOG(REQ, ERROR, "parse rSwCtrlInfo error u4Ret=%d\n", u4Ret);
-
-	rSwCtrlInfo.u4Data = u4Sel << 30;
-	DBGLOG(REQ, LOUD, "u4Sel=%d u4Data=0x%x,\n", u4Sel, rSwCtrlInfo.u4Data);
-	rStatus = kalIoctl(prGlueInfo, wlanoidSetSwCtrlWrite, &rSwCtrlInfo,
-			   sizeof(rSwCtrlInfo), FALSE, FALSE, TRUE, &u4BufLen);
-
-	if (rStatus != WLAN_STATUS_SUCCESS) {
-		DBGLOG(REQ, ERROR, "ERR: kalIoctl fail (%d)\n", rStatus);
-		return -1;
-	}
-
-	return i4BytesWritten;
-
-}
 
 int priv_driver_get_noise(IN struct net_device *prNetDev,
 				 IN char *pcCommand, IN int i4TotalLen)
@@ -14143,87 +13565,6 @@ int priv_driver_run_hqa(
 
 }
 
-int priv_driver_calibration(
-	struct net_device *prNetDev,
-	char *pcCommand,
-	int i4TotalLen)
-{
-	struct GLUE_INFO *prGlueInfo = NULL;
-	struct mt66xx_chip_info *prChipInfo;
-	int32_t i4BytesWritten = 0;
-	int32_t i4Argc = 0;
-	int8_t *apcArgv[WLAN_CFG_ARGV_MAX] = {0};
-	uint32_t u4Ret, u4GetInput = 0, u4GetInput2 = 0;
-	int32_t i4ArgNum = 3;
-
-	ASSERT(prNetDev);
-	if (GLUE_CHK_PR2(prNetDev, pcCommand) == FALSE)
-		return -1;
-
-	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
-	prChipInfo = prGlueInfo->prAdapter->chip_info;
-
-	DBGLOG(RFTEST, INFO, "command is %s\n", pcCommand);
-	wlanCfgParseArgument(pcCommand, &i4Argc, apcArgv);
-	DBGLOG(RFTEST, INFO, "argc is %i\n", i4Argc);
-
-	if (i4Argc >= i4ArgNum) {
-		u4Ret = kalkStrtou32(apcArgv[1], 0, &u4GetInput);
-		if (u4Ret) {
-			DBGLOG(RFTEST, INFO,
-				   "%s: Parsing Fail\n", __func__);
-		} else if (u4GetInput == 0) {
-
-			i4BytesWritten = kalSnprintf(pcCommand,
-				i4TotalLen,
-				"reset driver calibration result\n");
-
-			if (prChipInfo->calDebugCmd)
-				prChipInfo->calDebugCmd(u4GetInput, 0);
-
-		} else if (u4GetInput == 1) {
-
-			u4Ret = kalkStrtou32(apcArgv[2], 0, &u4GetInput2);
-			if (u4Ret) {
-				DBGLOG(RFTEST, INFO,
-					   "%s: Parsing 2 Fail\n", __func__);
-			} else if (u4GetInput2 == 0) {
-				i4BytesWritten = kalSnprintf(pcCommand,
-					i4TotalLen,
-					"driver result write back EMI\n");
-			} else {
-				i4BytesWritten = kalSnprintf(pcCommand,
-					i4TotalLen,
-					"FW use EMI original data\n");
-			}
-
-			if (prChipInfo->calDebugCmd)
-				prChipInfo->calDebugCmd(u4GetInput,
-					u4GetInput2);
-		}
-	} else {
-		i4BytesWritten = kalSnprintf(pcCommand,
-			i4TotalLen,
-			"support parameter as below:\n");
-
-		i4BytesWritten += kalSnprintf(
-			pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"0: reset driver calibration result\n");
-
-		i4BytesWritten += kalSnprintf(
-			pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"1,0: driver result write back EMI\n");
-
-		i4BytesWritten += kalSnprintf(
-			pcCommand + i4BytesWritten,
-			i4TotalLen - i4BytesWritten,
-			"1,1: FW use EMI original data\n");
-	}
-
-	return i4BytesWritten;
-}
 
 int priv_driver_get_nvram(IN struct net_device *prNetDev,
 			       IN char *pcCommand, IN int i4TotalLen)
@@ -14606,6 +13947,208 @@ error:
 }
 
 
+int priv_driver_show_tr_info(IN struct net_device *prNetDev,
+			 IN char *pcCommand, IN int i4TotalLen)
+{
+	struct GLUE_INFO *prGlueInfo;
+	int32_t i4BytesWritten = 0;
+
+	ASSERT(prNetDev);
+
+	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
+
+	if (!netif_carrier_ok(prNetDev))
+		return -1;
+
+	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
+	kalIoctl(prGlueInfo, wlanoidShowPdmaInfo, (void *) pcCommand,
+		 i4TotalLen, FALSE, FALSE, TRUE, &i4BytesWritten);
+
+	return i4BytesWritten;
+}
+
+int priv_driver_show_ple_info(IN struct net_device *prNetDev,
+			 IN char *pcCommand, IN int i4TotalLen)
+{
+	struct GLUE_INFO *prGlueInfo;
+	int32_t i4BytesWritten = 0;
+
+	ASSERT(prNetDev);
+
+	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
+
+	if (!netif_carrier_ok(prNetDev))
+		return -1;
+
+	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
+	kalIoctl(prGlueInfo, wlanoidShowPleInfo, (void *) pcCommand,
+		 i4TotalLen, FALSE, FALSE, TRUE, &i4BytesWritten);
+
+	return i4BytesWritten;
+}
+
+int priv_driver_show_pse_info(IN struct net_device *prNetDev,
+			 IN char *pcCommand, IN int i4TotalLen)
+{
+	struct GLUE_INFO *prGlueInfo;
+	int32_t i4BytesWritten = 0;
+
+	ASSERT(prNetDev);
+
+	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
+
+	if (!netif_carrier_ok(prNetDev))
+		return -1;
+
+	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
+	kalIoctl(prGlueInfo, wlanoidShowPseInfo, (void *) pcCommand,
+		 i4TotalLen, FALSE, FALSE, TRUE, &i4BytesWritten);
+
+	return i4BytesWritten;
+}
+
+int priv_driver_show_csr_info(IN struct net_device *prNetDev,
+			 IN char *pcCommand, IN int i4TotalLen)
+{
+	struct GLUE_INFO *prGlueInfo;
+	int32_t i4BytesWritten = 0;
+
+	ASSERT(prNetDev);
+
+	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
+
+	if (!netif_carrier_ok(prNetDev))
+		return -1;
+
+	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
+	kalIoctl(prGlueInfo, wlanoidShowCsrInfo, (void *) pcCommand,
+		 i4TotalLen, FALSE, FALSE, TRUE, &i4BytesWritten);
+
+	return i4BytesWritten;
+}
+
+int priv_driver_show_dmasch_info(IN struct net_device *prNetDev,
+			 IN char *pcCommand, IN int i4TotalLen)
+{
+	struct GLUE_INFO *prGlueInfo;
+	int32_t i4BytesWritten = 0;
+
+	ASSERT(prNetDev);
+
+	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
+
+	if (!netif_carrier_ok(prNetDev))
+		return -1;
+
+	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
+	kalIoctl(prGlueInfo, wlanoidShowDmaschInfo, (void *) pcCommand,
+		 i4TotalLen, FALSE, FALSE, TRUE, &i4BytesWritten);
+
+	return i4BytesWritten;
+}
+
+#if CFG_SUPPORT_EASY_DEBUG
+int priv_driver_fw_param(IN struct net_device *prNetDev,
+			 IN char *pcCommand, IN int i4TotalLen)
+{
+	struct GLUE_INFO *prGlueInfo;
+	int32_t i4BytesWritten = 0;
+
+	ASSERT(prNetDev);
+
+	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
+
+	if (!netif_carrier_ok(prNetDev))
+		return -1;
+
+	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
+	kalIoctl(prGlueInfo, wlanoidSetFwParam, (void *) (pcCommand + 13),
+		 i4TotalLen - 13, FALSE, FALSE, FALSE, &i4BytesWritten);
+
+	return i4BytesWritten;
+}
+#endif /* CFG_SUPPORT_EASY_DEBUG */
+
+int priv_driver_tspec_operation(IN struct net_device *prNetDev,
+			 IN char *pcCommand, IN int i4TotalLen)
+{
+	struct GLUE_INFO *prGlueInfo;
+	int32_t i4BytesWritten = 0;
+
+	ASSERT(prNetDev);
+
+	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
+
+	if (!netif_carrier_ok(prNetDev))
+		return -1;
+
+	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
+	kalIoctl(prGlueInfo, wlanoidTspecOperation, (void *) pcCommand,
+		 i4TotalLen, FALSE, FALSE, FALSE, &i4BytesWritten);
+
+	return i4BytesWritten;
+}
+
+int priv_driver_it_operation(IN struct net_device *prNetDev,
+			 IN char *pcCommand, IN int i4TotalLen)
+{
+	struct GLUE_INFO *prGlueInfo;
+	int32_t i4BytesWritten = 0;
+
+	ASSERT(prNetDev);
+
+	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
+
+	if (!netif_carrier_ok(prNetDev))
+		return -1;
+
+	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
+	kalIoctl(prGlueInfo, wlanoidPktProcessIT, (void *) pcCommand,
+		 i4TotalLen, FALSE, FALSE, FALSE, &i4BytesWritten);
+
+	return i4BytesWritten;
+}
+
+int priv_driver_fw_event(IN struct net_device *prNetDev,
+			 IN char *pcCommand, IN int i4TotalLen)
+{
+	struct GLUE_INFO *prGlueInfo;
+	int32_t i4BytesWritten = 0;
+
+	ASSERT(prNetDev);
+
+	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
+
+	if (!netif_carrier_ok(prNetDev))
+		return -1;
+
+	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
+	kalIoctl(prGlueInfo, wlanoidFwEventIT, (void *) (pcCommand + 9),
+		 i4TotalLen - 9, FALSE, FALSE, FALSE, &i4BytesWritten);
+
+	return i4BytesWritten;
+}
+
+int priv_driver_uapsd(IN struct net_device *prNetDev,
+			 IN char *pcCommand, IN int i4TotalLen)
+{
+	struct GLUE_INFO *prGlueInfo;
+	int32_t i4BytesWritten = 0;
+
+	ASSERT(prNetDev);
+
+	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
+
+	if (!netif_carrier_ok(prNetDev))
+		return -1;
+
+	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
+	kalIoctl(prGlueInfo, wlanoidDumpUapsdSetting, (void *) pcCommand,
+		 i4TotalLen, FALSE, FALSE, FALSE, &i4BytesWritten);
+
+	return i4BytesWritten;
+}
+
 int32_t priv_driver_cmds(IN struct net_device *prNetDev, IN int8_t *pcCommand,
 			 IN int32_t i4TotalLen)
 {
@@ -14631,96 +14174,9 @@ int32_t priv_driver_cmds(IN struct net_device *prNetDev, IN int8_t *pcCommand,
 	}
 
 	/* Can't find suitable command handler function */
-	if (ucCmdFound == FALSE) {
-		if (strnicmp(pcCommand, CMD_DBG_SHOW_TR_INFO,
-				strlen(CMD_DBG_SHOW_TR_INFO)) == 0) {
-			kalIoctl(prGlueInfo,
-				 wlanoidShowPdmaInfo,
-				 (void *) pcCommand, i4TotalLen,
-				 FALSE, FALSE, TRUE, &i4BytesWritten);
-		} else if (strnicmp(pcCommand, CMD_DBG_SHOW_PLE_INFO,
-				strlen(CMD_DBG_SHOW_PLE_INFO)) == 0) {
-			kalIoctl(prGlueInfo,
-				 wlanoidShowPleInfo,
-				 (void *) pcCommand, i4TotalLen,
-				 FALSE, FALSE, TRUE, &i4BytesWritten);
-		} else if (strnicmp(pcCommand, CMD_DBG_SHOW_PSE_INFO,
-				strlen(CMD_DBG_SHOW_PSE_INFO)) == 0) {
-			kalIoctl(prGlueInfo,
-				 wlanoidShowPseInfo,
-				 (void *) pcCommand, i4TotalLen,
-				 FALSE, FALSE, TRUE, &i4BytesWritten);
-		} else if (strnicmp(pcCommand, CMD_DBG_SHOW_CSR_INFO,
-				strlen(CMD_DBG_SHOW_CSR_INFO)) == 0) {
-			kalIoctl(prGlueInfo,
-				 wlanoidShowCsrInfo,
-				 (void *) pcCommand, i4TotalLen,
-				 FALSE, FALSE, TRUE, &i4BytesWritten);
-		} else if (strnicmp(pcCommand, CMD_DBG_SHOW_DMASCH_INFO,
-				strlen(CMD_DBG_SHOW_DMASCH_INFO)) == 0) {
-			kalIoctl(prGlueInfo,
-				 wlanoidShowDmaschInfo,
-				 (void *) pcCommand, i4TotalLen,
-				 FALSE, FALSE, TRUE, &i4BytesWritten);
-#if CFG_SUPPORT_EASY_DEBUG
-		} else if (strnicmp(pcCommand, CMD_FW_PARAM,
-				strlen(CMD_FW_PARAM)) == 0) {
-			kalIoctl(prGlueInfo, wlanoidSetFwParam,
-				 (void *)(pcCommand + 13),
-				 i4TotalLen - 13, FALSE, FALSE, FALSE,
-				 &i4BytesWritten);
-#endif /* CFG_SUPPORT_EASY_DEBUG */
-			} else if (strnicmp(pcCommand, CMD_GET_WFDMA_INFO,
-					strlen(CMD_GET_WFDMA_INFO)) == 0) {
-				kalIoctl(prGlueInfo,
-					 wlanoidShowPdmaInfo,
-					 (void *) pcCommand, i4TotalLen,
-					 FALSE, FALSE, TRUE, &i4BytesWritten);
-			} else if (strnicmp(pcCommand, CMD_GET_PLE_INFO,
-					strlen(CMD_GET_PLE_INFO)) == 0) {
-				kalIoctl(prGlueInfo,
-					 wlanoidShowPleInfo,
-					 (void *) pcCommand, i4TotalLen,
-					 FALSE, FALSE, TRUE, &i4BytesWritten);
-			} else if (strnicmp(pcCommand, CMD_GET_PSE_INFO,
-					strlen(CMD_GET_PSE_INFO)) == 0) {
-				kalIoctl(prGlueInfo,
-					 wlanoidShowPseInfo,
-					 (void *) pcCommand, i4TotalLen,
-					 FALSE, FALSE, TRUE, &i4BytesWritten);
-			} else if (strnicmp(pcCommand, CMD_GET_DMASCH_INFO,
-					strlen(CMD_GET_DMASCH_INFO)) == 0) {
-				kalIoctl(prGlueInfo,
-					 wlanoidShowDmaschInfo,
-					 (void *) pcCommand, i4TotalLen,
-					 FALSE, FALSE, TRUE, &i4BytesWritten);
-		} else if (!strnicmp(pcCommand, CMD_DUMP_TS,
-				     strlen(CMD_DUMP_TS)) ||
-			   !strnicmp(pcCommand, CMD_ADD_TS,
-				     strlen(CMD_ADD_TS)) ||
-			   !strnicmp(pcCommand, CMD_DEL_TS,
-				     strlen(CMD_DEL_TS))) {
-			kalIoctl(prGlueInfo, wlanoidTspecOperation,
-				 (void *)pcCommand, i4TotalLen, FALSE, FALSE,
-				 FALSE, &i4BytesWritten);
-		} else if (kalStrStr(pcCommand, "-IT")) {
-			kalIoctl(prGlueInfo, wlanoidPktProcessIT,
-				 (void *)pcCommand, i4TotalLen, FALSE, FALSE,
-				 FALSE, &i4BytesWritten);
-		} else if (!strnicmp(pcCommand, CMD_FW_EVENT, 9)) {
-			kalIoctl(prGlueInfo, wlanoidFwEventIT,
-				 (void *)(pcCommand + 9), i4TotalLen - 9, FALSE,
-				 FALSE, FALSE, &i4BytesWritten);
-		} else if (!strnicmp(pcCommand, CMD_DUMP_UAPSD,
-				     strlen(CMD_DUMP_UAPSD))) {
-			kalIoctl(prGlueInfo, wlanoidDumpUapsdSetting,
-				 (void *)pcCommand, i4TotalLen, FALSE, FALSE,
-				 FALSE, &i4BytesWritten);
-		} else
-			i4BytesWritten = priv_cmd_not_support(prNetDev,
-							      pcCommand,
-							      i4TotalLen);
-	}
+	if (ucCmdFound == FALSE)
+		i4BytesWritten = priv_cmd_not_support(prNetDev, pcCommand,
+						      i4TotalLen);
 
 	if (i4BytesWritten >= 0) {
 		if ((i4BytesWritten == 0) && (i4TotalLen > 0)) {
@@ -15101,50 +14557,3 @@ int priv_driver_set_pwr_temp(IN struct net_device *prNetDev,
 }
 #endif
 
-int priv_driver_set_multista_use_case(IN struct net_device *prNetDev,
-	IN char *pcCommand, IN int i4TotalLen)
-{
-	struct GLUE_INFO *prGlueInfo = NULL;
-#if 0
-	uint32_t rStatus = WLAN_STATUS_SUCCESS;
-#endif
-	int32_t i4BytesWritten = 0;
-	int32_t i4Argc = 0;
-	int8_t *apcArgv[WLAN_CFG_ARGV_MAX] = {0};
-	uint32_t u4Ret, u4UseCase = 0;
-
-	ASSERT(prNetDev);
-
-	if (GLUE_CHK_PR2(prNetDev, pcCommand) == FALSE)
-		return -1;
-
-	prGlueInfo = *((struct GLUE_INFO **) netdev_priv(prNetDev));
-
-	DBGLOG(REQ, LOUD, "command is %s\n", pcCommand);
-	wlanCfgParseArgument(pcCommand, &i4Argc, apcArgv);
-
-	if (i4Argc == 2) {
-
-		u4Ret = kalkStrtou32(apcArgv[1], 0, &u4UseCase);
-		if (u4Ret)
-			DBGLOG(REQ, LOUD, "parse apcArgv error u4Ret=%d\n",
-			       u4Ret);
-
-#if 0
-		rStatus = kalIoctl(prGlueInfo,
-				   wlanoidSetMultiStaUseCase,
-				   &u4UseCase,
-				   sizeof(uint32_t),
-				   FALSE,
-				   FALSE,
-				   FALSE,
-				   &u4BufLen);
-
-		if (rStatus != WLAN_STATUS_SUCCESS)
-			return -1;
-#endif
-	} else
-		DBGLOG(INIT, ERROR, "Invalid input params\n");
-
-	return i4BytesWritten;
-}

@@ -118,6 +118,13 @@ const long channel_freq[] = {
  */
 /* NOTE: name in iwpriv_args only have 16 bytes */
 static const struct iw_priv_args rIwPrivTable[] = {
+	{IOCTL_GET_DRIVER, IW_PRIV_TYPE_CHAR | IW_PRIV_BUF_SIZE,
+		IW_PRIV_TYPE_CHAR | IW_PRIV_BUF_SIZE, "driver"},
+/*---------------------------------------------------------------------------
+ *  debug only
+ *---------------------------------------------------------------------------
+ */
+#if BUILD_QA_DBG
 	{IOCTL_SET_INT, IW_PRIV_TYPE_INT | IW_PRIV_SIZE_FIXED | 1, 0, ""},
 	{IOCTL_GET_INT, 0, IW_PRIV_TYPE_INT | IW_PRIV_SIZE_FIXED | 1, ""},
 	{IOCTL_SET_INT, IW_PRIV_TYPE_INT | IW_PRIV_SIZE_FIXED | 3, 0, ""},
@@ -141,8 +148,6 @@ static const struct iw_priv_args rIwPrivTable[] = {
 	{IOCTL_SET_STRUCT, 256, 0, ""},
 	{IOCTL_GET_STRUCT, 0, 256, ""},
 
-	{IOCTL_GET_DRIVER, IW_PRIV_TYPE_CHAR | IW_PRIV_BUF_SIZE,
-		IW_PRIV_TYPE_CHAR | IW_PRIV_BUF_SIZE, "driver"},
 
 #if CFG_SUPPORT_QA_TOOL
 	/* added for ATE iwpriv Command */
@@ -260,6 +265,7 @@ static const struct iw_priv_args rIwPrivTable[] = {
 #endif
 	{PRIV_CMD_SHOW_CHANNEL, 0, IW_PRIV_TYPE_INT | IW_PRIV_SIZE_FIXED | 1,
 	"show_Channel"},
+#endif /* BUILD_QA_DBG */
 };
 
 static const iw_handler rIwPrivHandler[] = {
@@ -274,7 +280,7 @@ static const iw_handler rIwPrivHandler[] = {
 	[IOCTL_SET_STRUCT - SIOCIWFIRSTPRIV] = priv_set_struct,
 	[IOCTL_GET_STRUCT - SIOCIWFIRSTPRIV] = priv_get_struct,
 	[IOCTL_SET_STRUCT_FOR_EM - SIOCIWFIRSTPRIV] = priv_set_struct,
-	[IOCTL_SET_INTS - SIOCIWFIRSTPRIV] = priv_set_ints,
+	[IOCTL_SET_INTS - SIOCIWFIRSTPRIV] = NULL,
 	[IOCTL_GET_INTS - SIOCIWFIRSTPRIV] = priv_get_ints,
 	[IOCTL_GET_DRIVER - SIOCIWFIRSTPRIV] = priv_set_driver,
 #if CFG_SUPPORT_NAN

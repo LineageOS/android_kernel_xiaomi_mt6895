@@ -284,7 +284,297 @@ struct CMD_VALIDATE_POLICY set_rst_hang_policy[COMMON_CMD_SET_ARG_NUM(2)] = {
 };
 #endif
 
+#if CFG_SUPPORT_EASY_DEBUG
+struct CMD_VALIDATE_POLICY set_fw_param_policy[COMMON_CMD_SET_ARG_NUM(3)] = {
+	[COMMON_CMD_ATTR_IDX(1)] = {.type = NLA_STRING, .min = 0, .max = 20},
+	[COMMON_CMD_ATTR_IDX(2)] = {.type = NLA_U8, .min = 0, .max = 1}
+};
+#endif
+
+struct CMD_VALIDATE_POLICY tspec_operation_policy[COMMON_CMD_SET_ARG_NUM(3)] = {
+	[COMMON_CMD_ATTR_IDX(1)] = {.type = NLA_STRING, .min = 12, .max = 20},
+	[COMMON_CMD_ATTR_IDX(2)] = {.type = NLA_U32, .min = 0, .max = U32_MAX}
+};
+
+struct CMD_VALIDATE_POLICY it_operation_policy[COMMON_CMD_SET_ARG_NUM(5)] = {
+	[COMMON_CMD_ATTR_IDX(1)] = {.type = NLA_U8, .min = 0, .max = U8_MAX},
+	[COMMON_CMD_ATTR_IDX(2)] = {.type = NLA_U8, .min = 0, .max = U8_MAX},
+	[COMMON_CMD_ATTR_IDX(3)] = {.type = NLA_U8, .min = 0, .max = U8_MAX},
+	[COMMON_CMD_ATTR_IDX(4)] = {.type = NLA_U8, .min = 0, .max = U8_MAX}
+};
+
+struct CMD_VALIDATE_POLICY fw_event_policy[COMMON_CMD_SET_ARG_NUM(2)] = {
+	[COMMON_CMD_ATTR_IDX(1)] = {.type = NLA_STRING, .len = 7}
+};
+
 struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
+	{
+		.pcCmdStr  = CMD_MIRACAST,
+		.pfHandler = priv_driver_set_miracast,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
+		.policy    = set_miracast_policy,
+		.u4PolicySize = ARRAY_SIZE(set_miracast_policy)
+	},
+	{
+		.pcCmdStr  = CMD_SETCASTMODE,
+		.pfHandler = priv_driver_set_miracast,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
+		.policy    = set_miracast_policy,
+		.u4PolicySize = ARRAY_SIZE(set_miracast_policy)
+	},
+#if CFG_SUPPORT_NAN
+	{
+		.pcCmdStr  = CMD_NAN_START,
+		.pfHandler = priv_driver_set_nan_start,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
+		.policy    = set_flag_policy,
+		.u4PolicySize = ARRAY_SIZE(set_flag_policy)
+	},
+	{
+		.pcCmdStr  = CMD_NAN_GET_MASTER_IND,
+		.pfHandler = priv_driver_get_master_ind,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+	{
+		.pcCmdStr  = CMD_NAN_GET_RANGE,
+		.pfHandler = priv_driver_get_range,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+	{
+		.pcCmdStr  = CMD_FAW_RESET,
+		.pfHandler = priv_driver_set_faw_reset,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+	{
+		.pcCmdStr  = CMD_FAW_CONFIG,
+		.pfHandler = priv_driver_set_faw_config,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(3),
+		.policy    = set_faw_policy,
+		.u4PolicySize = ARRAY_SIZE(set_faw_policy)
+	},
+	{
+		.pcCmdStr  = CMD_FAW_APPLY,
+		.pfHandler = priv_driver_set_faw_apply,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+#endif
+#if (CFG_SUPPORT_DFS_MASTER == 1)
+	{
+		.pcCmdStr  = CMD_SET_DFS_CHN_AVAILABLE,
+		.pfHandler = priv_driver_set_dfs_channel_available,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(3),
+		.policy    = u8_policy,
+		.u4PolicySize = ARRAY_SIZE(u8_policy)
+	},
+#endif
+#if CFG_WOW_SUPPORT
+	{
+		.pcCmdStr  = CMD_WOW_START,
+		.pfHandler = priv_driver_set_wow,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
+		.policy    = set_flag_policy,
+		.u4PolicySize = ARRAY_SIZE(set_flag_policy)
+	},
+	{
+		.pcCmdStr  = CMD_SET_WOW_ENABLE,
+		.pfHandler = priv_driver_set_wow_enable,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
+		.policy    = set_flag_policy,
+		.u4PolicySize = ARRAY_SIZE(set_flag_policy)
+	},
+	{
+		.pcCmdStr  = CMD_SET_WOW_PAR,
+		.pfHandler = priv_driver_set_wow_par,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(7),
+		.policy    = u8_policy,
+		.u4PolicySize = ARRAY_SIZE(u8_policy)
+	},
+	{
+		.pcCmdStr  = CMD_SET_WOW_UDP,
+		.pfHandler = priv_driver_set_wow_udpport,
+		.argPolicy = VERIFY_MIN_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+	{
+		.pcCmdStr  = CMD_SET_WOW_TCP,
+		.pfHandler = priv_driver_set_wow_tcpport,
+		.argPolicy = VERIFY_MIN_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+	{
+		.pcCmdStr  = CMD_GET_WOW_PORT,
+		.pfHandler = priv_driver_get_wow_port,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(3),
+		.policy    = get_wow_port_policy,
+		.u4PolicySize = ARRAY_SIZE(get_wow_port_policy)
+	},
+#endif
+	{
+		.pcCmdStr  = CMD_SET_CFG,
+		.pfHandler = priv_driver_set_cfg,
+		.argPolicy = VERIFY_MIN_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(3),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+	{
+		.pcCmdStr  = CMD_GET_CFG,
+		.pfHandler = priv_driver_get_cfg,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(2),
+		.policy    = get_cfg_policy,
+		.u4PolicySize = ARRAY_SIZE(get_cfg_policy)
+	},
+	{
+		.pcCmdStr  = CMD_GET_CAPAB_RSDB,
+		.pfHandler = priv_driver_get_capab_rsdb,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+#if CFG_SUPPORT_DYNAMIC_PWR_LIMIT
+	{
+		.pcCmdStr  = CMD_SET_PWR_CTRL,
+		.pfHandler = priv_driver_set_power_control,
+		.argPolicy = VERIFY_MIN_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+#endif
+	{
+		.pcCmdStr  = CMD_GET_HAPD_CHANNEL,
+		.pfHandler = priv_driver_get_hapd_channel,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+#if (CFG_SUPPORT_POWER_THROTTLING == 1)
+	{
+		.pcCmdStr  = CMD_THERMAL_PROTECT_ENABLE,
+		.pfHandler = priv_driver_thermal_protect_enable,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(7),
+		.policy    = thermal_protect_enable_policy,
+		.u4PolicySize = ARRAY_SIZE(thermal_protect_enable_policy)
+	},
+	{
+		.pcCmdStr  = CMD_THERMAL_PROTECT_DISABLE,
+		.pfHandler = priv_driver_thermal_protect_disable,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(4),
+		.policy    = u8_policy,
+		.u4PolicySize = ARRAY_SIZE(u8_policy)
+	},
+	{
+		.pcCmdStr  = CMD_THERMAL_PROTECT_DUTY_CFG,
+		.pfHandler = priv_driver_thermal_protect_duty_cfg,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(4),
+		.policy    = u8_policy,
+		.u4PolicySize = ARRAY_SIZE(u8_policy)
+	},
+	{
+		.pcCmdStr  = CMD_THERMAL_PROTECT_STATE_ACT,
+		.pfHandler = priv_driver_thermal_protect_state_act,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(5),
+		.policy    = u8_policy,
+		.u4PolicySize = ARRAY_SIZE(u8_policy)
+	},
+#endif
+#if CFG_SUPPORT_DYNAMIC_PWR_LIMIT
+	{
+		.pcCmdStr  = CMD_SET_PWR_CTRL,
+		.pfHandler = priv_driver_set_power_control,
+		.argPolicy = VERIFY_MIN_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+#endif
+#if (CFG_SUPPORT_802_11AX == 1)
+	{
+		.pcCmdStr  = CMD_SET_BA_SIZE,
+		.pfHandler = priv_driver_set_ba_size,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
+		.policy    = u16_policy,
+		.u4PolicySize = ARRAY_SIZE(u16_policy)
+	},
+	{
+		.pcCmdStr  = CMD_SET_RX_BA_SIZE,
+		.pfHandler = priv_driver_set_trx_ba_size,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(3),
+		.policy    = set_trx_ba_size_policy,
+		.u4PolicySize = ARRAY_SIZE(set_trx_ba_size_policy)
+	},
+	{
+		.pcCmdStr  = CMD_SET_TX_BA_SIZE,
+		.pfHandler = priv_driver_set_trx_ba_size,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(3),
+		.policy    = set_trx_ba_size_policy,
+		.u4PolicySize = ARRAY_SIZE(set_trx_ba_size_policy)
+	},
+#endif
+	{
+		.pcCmdStr  = CMD_DUMP_TS,
+		.pfHandler = priv_driver_tspec_operation,
+		.argPolicy = VERIFY_MIN_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(3),
+		.policy    = tspec_operation_policy,
+		.u4PolicySize = ARRAY_SIZE(tspec_operation_policy)
+	},
+	{
+		.pcCmdStr  = CMD_ADD_TS,
+		.pfHandler = priv_driver_tspec_operation,
+		.argPolicy = VERIFY_MIN_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(3),
+		.policy    = tspec_operation_policy,
+		.u4PolicySize = ARRAY_SIZE(tspec_operation_policy)
+	},
+	{
+		.pcCmdStr  = CMD_DEL_TS,
+		.pfHandler = priv_driver_tspec_operation,
+		.argPolicy = VERIFY_MIN_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(3),
+		.policy    = tspec_operation_policy,
+		.u4PolicySize = ARRAY_SIZE(tspec_operation_policy)
+	},
+/*---------------------------------------------------------------------------
+ *  debug only
+ *---------------------------------------------------------------------------
+ */
+#if BUILD_QA_DBG
 	{
 		.pcCmdStr  = CMD_AP_START,
 		.pfHandler = priv_driver_set_ap_start,
@@ -350,23 +640,6 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.u4PolicySize = ARRAY_SIZE(get_chnls_policy)
 	},
 	{
-		.pcCmdStr  = CMD_MIRACAST,
-		.pfHandler = priv_driver_set_miracast,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = set_miracast_policy,
-		.u4PolicySize = ARRAY_SIZE(set_miracast_policy)
-	},
-	{
-		.pcCmdStr  = CMD_SETCASTMODE,
-		.pfHandler = priv_driver_set_miracast,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = set_miracast_policy,
-		.u4PolicySize = ARRAY_SIZE(set_miracast_policy)
-	},
-	/* Mediatek private command */
-	{
 		.pcCmdStr  = CMD_SET_SW_CTRL,
 		.pfHandler = priv_driver_set_sw_ctrl,
 		.argPolicy = VERIFY_EXACT_ARG_NUM,
@@ -427,7 +700,7 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.policy    = NULL,
 		.u4PolicySize = 0
 	},
-#endif /* CFG_SUPPORT_ICS */
+#endif
 #ifdef CFG_SUPPORT_SNIFFER_RADIOTAP
 	{
 		.pcCmdStr  = CMD_SET_MONITOR,
@@ -503,14 +776,6 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.u4PolicySize = ARRAY_SIZE(get_test_result_policy)
 	},
 	{
-		.pcCmdStr  = CMD_GET_STA_STAT2,
-		.pfHandler = priv_driver_get_sta_stat2,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-	{
 		.pcCmdStr  = CMD_GET_STA_STAT,
 		.pfHandler = priv_driver_get_sta_stat,
 		.argPolicy = VERIFY_MIN_ARG_NUM,
@@ -566,65 +831,7 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.policy    = NULL,
 		.u4PolicySize = 0
 	},
-#if CFG_SUPPORT_NAN
-	{
-		.pcCmdStr  = CMD_NAN_START,
-		.pfHandler = priv_driver_set_nan_start,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = set_flag_policy,
-		.u4PolicySize = ARRAY_SIZE(set_flag_policy)
-	},
-	{
-		.pcCmdStr  = CMD_NAN_GET_MASTER_IND,
-		.pfHandler = priv_driver_get_master_ind,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-	{
-		.pcCmdStr  = CMD_NAN_GET_RANGE,
-		.pfHandler = priv_driver_get_range,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-	{
-		.pcCmdStr  = CMD_FAW_RESET,
-		.pfHandler = priv_driver_set_faw_reset,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(1),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-	{
-		.pcCmdStr  = CMD_FAW_CONFIG,
-		.pfHandler = priv_driver_set_faw_config,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(3),
-		.policy    = set_faw_policy,
-		.u4PolicySize = ARRAY_SIZE(set_faw_policy)
-	},
-	{
-		.pcCmdStr  = CMD_FAW_APPLY,
-		.pfHandler = priv_driver_set_faw_apply,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-#endif
 #if (CFG_SUPPORT_DFS_MASTER == 1)
-	{
-		.pcCmdStr  = CMD_SET_DFS_CHN_AVAILABLE,
-		.pfHandler = priv_driver_set_dfs_channel_available,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(3),
-		.policy    = u8_policy,
-		.u4PolicySize = ARRAY_SIZE(u8_policy)
-	},
 	{
 		.pcCmdStr  = CMD_SHOW_DFS_STATE,
 		.pfHandler = priv_driver_show_dfs_state,
@@ -684,56 +891,6 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.u4PolicySize = ARRAY_SIZE(u8_policy)
 	},
 #endif
-#if CFG_WOW_SUPPORT
-	{
-		.pcCmdStr  = CMD_WOW_START,
-		.pfHandler = priv_driver_set_wow,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = set_flag_policy,
-		.u4PolicySize = ARRAY_SIZE(set_flag_policy)
-	},
-	{
-		.pcCmdStr  = CMD_SET_WOW_ENABLE,
-		.pfHandler = priv_driver_set_wow_enable,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = set_flag_policy,
-		.u4PolicySize = ARRAY_SIZE(set_flag_policy)
-	},
-	{
-		.pcCmdStr  = CMD_SET_WOW_PAR,
-		.pfHandler = priv_driver_set_wow_par,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(7),
-		.policy    = u8_policy,
-		.u4PolicySize = ARRAY_SIZE(u8_policy)
-	},
-	{
-		.pcCmdStr  = CMD_SET_WOW_UDP,
-		.pfHandler = priv_driver_set_wow_udpport,
-		.argPolicy = VERIFY_MIN_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-	{
-		.pcCmdStr  = CMD_SET_WOW_TCP,
-		.pfHandler = priv_driver_set_wow_tcpport,
-		.argPolicy = VERIFY_MIN_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-	{
-		.pcCmdStr  = CMD_GET_WOW_PORT,
-		.pfHandler = priv_driver_get_wow_port,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(3),
-		.policy    = get_wow_port_policy,
-		.u4PolicySize = ARRAY_SIZE(get_wow_port_policy)
-	},
-#endif
 	{
 		.pcCmdStr  = CMD_SET_ADV_PWS,
 		.pfHandler = priv_driver_set_adv_pws,
@@ -761,16 +918,6 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 	},
 #endif
 #if CFG_SUPPORT_MSP
-#if 0
-	{
-		.pcCmdStr  = CMD_GET_STAT,
-		.pfHandler = priv_driver_get_stat,
-		.argPolicy = VERIFY_MIN_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-#endif
 	{
 		.pcCmdStr  = CMD_GET_STA_STATISTICS,
 		.pfHandler = priv_driver_get_sta_statistics,
@@ -829,22 +976,6 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 	},
 #endif
 	{
-		.pcCmdStr  = CMD_SET_CFG,
-		.pfHandler = priv_driver_set_cfg,
-		.argPolicy = VERIFY_MIN_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(3),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-	{
-		.pcCmdStr  = CMD_GET_CFG,
-		.pfHandler = priv_driver_get_cfg,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(2),
-		.policy    = get_cfg_policy,
-		.u4PolicySize = ARRAY_SIZE(get_cfg_policy)
-	},
-	{
 		.pcCmdStr  = CMD_SET_EM_CFG,
 		.pfHandler = priv_driver_set_em_cfg,
 		.argPolicy = VERIFY_MIN_ARG_NUM,
@@ -892,14 +1023,6 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.policy    = NULL,
 		.u4PolicySize = 0
 	},
-	{
-		.pcCmdStr  = CMD_GET_CAPAB_RSDB,
-		.pfHandler = priv_driver_get_capab_rsdb,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
 #if CFG_SUPPORT_DBDC
 	{
 		.pcCmdStr  = CMD_SET_DBDC,
@@ -909,7 +1032,7 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.policy    = set_flag_policy,
 		.u4PolicySize = ARRAY_SIZE(set_flag_policy)
 	},
-#endif /*CFG_SUPPORT_DBDC*/
+#endif
 	{
 		.pcCmdStr  = CMD_GET_QUE_INFO,
 		.pfHandler = priv_driver_get_que_info,
@@ -975,16 +1098,8 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.policy    = NULL,
 		.u4PolicySize = 0
 	},
-#endif /* _HIF_SDIO && (MTK_WCN_HIF_SDIO == 0) */
+#endif
 #if CFG_SUPPORT_ADVANCE_CONTROL
-	{
-		.pcCmdStr  = CMD_SET_NOISE,
-		.pfHandler = priv_driver_set_noise,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = set_noise_policy,
-		.u4PolicySize = ARRAY_SIZE(set_noise_policy)
-	},
 	{
 		.pcCmdStr  = CMD_GET_NOISE,
 		.pfHandler = priv_driver_get_noise,
@@ -1077,7 +1192,7 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.policy    = NULL,
 		.u4PolicySize = 0
 	},
-#endif /* UT_TEST_MODE */
+#endif
 	{
 		.pcCmdStr  = CMD_GET_WIFI_TYPE,
 		.pfHandler = priv_driver_get_wifi_type,
@@ -1086,16 +1201,6 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.policy    = NULL,
 		.u4PolicySize = 0
 	},
-#if CFG_SUPPORT_DYNAMIC_PWR_LIMIT
-	{
-		.pcCmdStr  = CMD_SET_PWR_CTRL,
-		.pfHandler = priv_driver_set_power_control,
-		.argPolicy = VERIFY_MIN_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-#endif
 	{
 		.pcCmdStr  = CMD_SET_WHOLE_CHIP_RESET,
 		.pfHandler = priv_driver_trigger_whole_chip_reset,
@@ -1121,7 +1226,7 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.policy    = u8_policy,
 		.u4PolicySize = ARRAY_SIZE(u8_policy)
 	},
-#endif /* CFG_SUPPORT_CONNAC2X == 1 */
+#endif
 	{
 		.pcCmdStr  = CMD_SHOW_TXD_INFO,
 		.pfHandler = priv_driver_show_txd_info,
@@ -1143,14 +1248,6 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.pfHandler = priv_driver_run_hqa,
 		.argPolicy = VERIFY_MIN_ARG_NUM,
 		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-	{
-		.pcCmdStr  = CMD_CALIBRATION,
-		.pfHandler = priv_driver_calibration,
-		.argPolicy = VERIFY_MIN_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(3),
 		.policy    = NULL,
 		.u4PolicySize = 0
 	},
@@ -1186,14 +1283,6 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.policy    = u32_policy,
 		.u4PolicySize = ARRAY_SIZE(u32_policy)
 	},
-	{
-		.pcCmdStr  = CMD_GET_HAPD_CHANNEL,
-		.pfHandler = priv_driver_get_hapd_channel,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
 #if (CFG_SUPPORT_POWER_THROTTLING == 1)
 	{
 		.pcCmdStr  = CMD_SET_PWR_LEVEL,
@@ -1210,142 +1299,6 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(3),
 		.policy    = u32_policy,
 		.u4PolicySize = ARRAY_SIZE(u32_policy)
-	},
-	{
-		.pcCmdStr  = CMD_THERMAL_PROTECT_ENABLE,
-		.pfHandler = priv_driver_thermal_protect_enable,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(7),
-		.policy    = thermal_protect_enable_policy,
-		.u4PolicySize = ARRAY_SIZE(thermal_protect_enable_policy)
-	},
-	{
-		.pcCmdStr  = CMD_THERMAL_PROTECT_DISABLE,
-		.pfHandler = priv_driver_thermal_protect_disable,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(4),
-		.policy    = u8_policy,
-		.u4PolicySize = ARRAY_SIZE(u8_policy)
-	},
-	{
-		.pcCmdStr  = CMD_THERMAL_PROTECT_DUTY_CFG,
-		.pfHandler = priv_driver_thermal_protect_duty_cfg,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(4),
-		.policy    = u8_policy,
-		.u4PolicySize = ARRAY_SIZE(u8_policy)
-	},
-	{
-		.pcCmdStr  = CMD_THERMAL_PROTECT_STATE_ACT,
-		.pfHandler = priv_driver_thermal_protect_state_act,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(5),
-		.policy    = u8_policy,
-		.u4PolicySize = ARRAY_SIZE(u8_policy)
-	},
-#endif
-	{
-		.pcCmdStr  = CMD_SET_USE_CASE,
-		.pfHandler = priv_driver_set_multista_use_case,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = set_dual_sta_usecase_policy,
-		.u4PolicySize = ARRAY_SIZE(set_dual_sta_usecase_policy)
-	},
-#if CFG_SUPPORT_WIFI_SYSDVT
-	{
-		.pcCmdStr  = CMD_SET_TXS_TEST,
-		.pfHandler = priv_driver_txs_test,
-		.argPolicy = VERIFY_MIN_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(1),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-	{
-		.pcCmdStr  = CMD_SET_TXS_TEST_RESULT,
-		.pfHandler = priv_driver_txs_test_result,
-		.argPolicy = VERIFY_MIN_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(1),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-	{
-		.pcCmdStr  = CMD_SET_RXV_TEST,
-		.pfHandler = priv_driver_rxv_test,
-		.argPolicy = VERIFY_MIN_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(1),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-	{
-		.pcCmdStr  = CMD_SET_RXV_TEST_RESULT,
-		.pfHandler = priv_driver_rxv_test_result,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-#if CFG_TCP_IP_CHKSUM_OFFLOAD
-	{
-		.pcCmdStr  = CMD_SET_CSO_TEST,
-		.pfHandler = priv_driver_cso_test,
-		.argPolicy = VERIFY_MIN_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(1),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-#endif
-	{
-		.pcCmdStr  = CMD_SET_TX_AC_TEST,
-		.pfHandler = priv_driver_set_tx_test_ac,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = u8_policy,
-		.u4PolicySize = ARRAY_SIZE(u8_policy)
-	},
-	{
-		.pcCmdStr  = CMD_SET_TX_TEST,
-		.pfHandler = priv_driver_set_tx_test,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = u16_policy,
-		.u4PolicySize = ARRAY_SIZE(u16_policy)
-	},
-	{
-		.pcCmdStr  = CMD_SET_SKIP_CH_CHECK,
-		.pfHandler = priv_driver_skip_legal_ch_check,
-		.argPolicy = VERIFY_MIN_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(1),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-#if (CFG_SUPPORT_DMASHDL_SYSDVT)
-	{
-		.pcCmdStr  = CMD_SET_DMASHDL_DUMP,
-		.pfHandler = priv_driver_show_dmashdl_allcr,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-	{
-		.pcCmdStr  = CMD_SET_DMASHDL_DVT_ITEM,
-		.pfHandler = priv_driver_dmashdl_dvt_item,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(3),
-		.policy    = u8_policy,
-		.u4PolicySize = ARRAY_SIZE(u8_policy)
-	},
-#endif
-#endif
-#if CFG_SUPPORT_DYNAMIC_PWR_LIMIT
-	{
-		.pcCmdStr  = CMD_SET_PWR_CTRL,
-		.pfHandler = priv_driver_set_power_control,
-		.argPolicy = VERIFY_MIN_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = NULL,
-		.u4PolicySize = 0
 	},
 #endif
 	{
@@ -1412,30 +1365,6 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
 		.policy    = set_flag_policy,
 		.u4PolicySize = ARRAY_SIZE(set_flag_policy)
-	},
-	{
-		.pcCmdStr  = CMD_SET_BA_SIZE,
-		.pfHandler = priv_driver_set_ba_size,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = u16_policy,
-		.u4PolicySize = ARRAY_SIZE(u16_policy)
-	},
-	{
-		.pcCmdStr  = CMD_SET_RX_BA_SIZE,
-		.pfHandler = priv_driver_set_trx_ba_size,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(3),
-		.policy    = set_trx_ba_size_policy,
-		.u4PolicySize = ARRAY_SIZE(set_trx_ba_size_policy)
-	},
-	{
-		.pcCmdStr  = CMD_SET_TX_BA_SIZE,
-		.pfHandler = priv_driver_set_trx_ba_size,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(3),
-		.policy    = set_trx_ba_size_policy,
-		.u4PolicySize = ARRAY_SIZE(set_trx_ba_size_policy)
 	},
 	{
 		.pcCmdStr  = CMD_SET_TP_TEST_MODE,
@@ -1554,6 +1483,129 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.u4PolicySize = 0
 	},
 #endif
+	{
+		.pcCmdStr  = CMD_DBG_SHOW_TR_INFO,
+		.pfHandler = priv_driver_show_tr_info,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+	{
+		.pcCmdStr  = CMD_DBG_SHOW_PLE_INFO,
+		.pfHandler = priv_driver_show_ple_info,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+	{
+		.pcCmdStr  = CMD_DBG_SHOW_PSE_INFO,
+		.pfHandler = priv_driver_show_pse_info,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+	{
+		.pcCmdStr  = CMD_DBG_SHOW_CSR_INFO,
+		.pfHandler = priv_driver_show_csr_info,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+	{
+		.pcCmdStr  = CMD_DBG_SHOW_DMASCH_INFO,
+		.pfHandler = priv_driver_show_dmasch_info,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+#if CFG_SUPPORT_EASY_DEBUG
+	{
+		.pcCmdStr  = CMD_FW_PARAM,
+		.pfHandler = priv_driver_fw_param,
+		.argPolicy = VERIFY_MIN_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(3),
+		.policy    = set_fw_param_policy,
+		.u4PolicySize = ARRAY_SIZE(set_fw_param_policy)
+	},
+#endif
+	{
+		.pcCmdStr  = CMD_GET_WFDMA_INFO,
+		.pfHandler = priv_driver_show_tr_info,
+		.argPolicy = VERIFY_MIN_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+	{
+		.pcCmdStr  = CMD_GET_PLE_INFO,
+		.pfHandler = priv_driver_show_ple_info,
+		.argPolicy = VERIFY_MIN_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+	{
+		.pcCmdStr  = CMD_GET_PSE_INFO,
+		.pfHandler = priv_driver_show_pse_info,
+		.argPolicy = VERIFY_MIN_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+	{
+		.pcCmdStr  = CMD_GET_DMASCH_INFO,
+		.pfHandler = priv_driver_show_dmasch_info,
+		.argPolicy = VERIFY_MIN_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+	{
+		.pcCmdStr  = CMD_RM_IT,
+		.pfHandler = priv_driver_it_operation,
+		.argPolicy = VERIFY_MIN_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(5),
+		.policy    = it_operation_policy,
+		.u4PolicySize = ARRAY_SIZE(it_operation_policy)
+	},
+	{
+		.pcCmdStr  = CMD_BTM_IT,
+		.pfHandler = priv_driver_it_operation,
+		.argPolicy = VERIFY_MIN_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(5),
+		.policy    = it_operation_policy,
+		.u4PolicySize = ARRAY_SIZE(it_operation_policy)
+	},
+	{
+		.pcCmdStr  = CMD_BT_IT,
+		.pfHandler = priv_driver_it_operation,
+		.argPolicy = VERIFY_MIN_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(5),
+		.policy    = it_operation_policy,
+		.u4PolicySize = ARRAY_SIZE(it_operation_policy)
+	},
+	{
+		.pcCmdStr  = CMD_FW_EVENT,
+		.pfHandler = priv_driver_fw_event,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(2),
+		.policy    = fw_event_policy,
+		.u4PolicySize = ARRAY_SIZE(fw_event_policy)
+	},
+	{
+		.pcCmdStr  = CMD_DUMP_UAPSD,
+		.pfHandler = priv_driver_uapsd,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+#endif /* BUILD_QA_DBG */
 };
 
 struct STR_CMD_HANDLER str_cmd_handlers[] = {
@@ -1565,6 +1617,7 @@ struct STR_CMD_HANDLER str_cmd_handlers[] = {
 		.policy    = u8_policy,
 		.u4PolicySize = ARRAY_SIZE(u8_policy)
 	},
+#if BUILD_QA_DBG
 	{
 		.pcCmdStr  = CMD_NEIGHBOR_REQUEST,
 		.pfHandler = testmode_neighbor_request,
@@ -1573,6 +1626,8 @@ struct STR_CMD_HANDLER str_cmd_handlers[] = {
 		.policy    = NULL,
 		.u4PolicySize = 0
 	},
+#endif /* BUILD_QA_DBG */
+#if BUILD_QA_DBG
 	{
 		.pcCmdStr  = CMD_BSS_TRAN_QUERY,
 		.pfHandler = testmode_bss_tran_query,
@@ -1581,6 +1636,7 @@ struct STR_CMD_HANDLER str_cmd_handlers[] = {
 		.policy    = NULL,
 		.u4PolicySize = 0
 	},
+#endif /* BUILD_QA_DBG */
 	{
 		.pcCmdStr  = CMD_OSHARE,
 		.pfHandler = testmode_osharemod,
@@ -1900,16 +1956,26 @@ uint8_t cmd_validate(int8_t *pcCmd, enum ARG_NUM_POLICY argPolicy,
 PRIV_CMD_FUNCTION get_priv_cmd_handler(uint8_t *cmd, int32_t len)
 {
 	uint8_t ucIdx = 0;
-	uint32_t ret = WLAN_STATUS_FAILURE;
+	uint32_t ret;
 	int8_t *pcCmd;
 	int32_t i4CmdSize;
+	uint32_t cmdLen;
 
 	for (ucIdx = 0; ucIdx < sizeof(priv_cmd_handlers) / sizeof(struct
 				PRIV_CMD_HANDLER); ucIdx++) {
-		if (strnicmp(cmd, priv_cmd_handlers[ucIdx].pcCmdStr,
-			     strlen(priv_cmd_handlers[ucIdx].pcCmdStr)) == 0) {
+		cmdLen = strlen(priv_cmd_handlers[ucIdx].pcCmdStr);
+		if (len >= cmdLen &&
+			strnicmp(cmd, priv_cmd_handlers[ucIdx].pcCmdStr,
+			     cmdLen) == 0) {
+			/* skip the pcCmdStr without cmd postfix, except
+			 * '\0' for cmd without param, '\n' for proc node
+			 */
+			if (cmd[cmdLen] != '\0' && cmd[cmdLen] != '\n' &&
+				cmd[cmdLen] != ' ' && cmd[cmdLen] != '=')
+				continue;
 
-			i4CmdSize = len;
+			/* add one for null-terminated */
+			i4CmdSize = len + 1;
 			pcCmd = (int8_t *) kalMemAlloc(i4CmdSize, VIR_MEM_TYPE);
 			if (!pcCmd) {
 				DBGLOG(REQ, WARN,
@@ -1918,6 +1984,7 @@ PRIV_CMD_FUNCTION get_priv_cmd_handler(uint8_t *cmd, int32_t len)
 			}
 			kalMemZero(pcCmd, i4CmdSize);
 			kalMemCopy(pcCmd, cmd, len);
+			pcCmd[len] = '\0';
 
 			DBGLOG(REQ, LOUD,
 				"ioctl priv command is [%s], argPolicy[%d] argNum[%d] u4PolicySize[%d]\n",
@@ -1960,15 +2027,23 @@ PRIV_CMD_FUNCTION get_priv_cmd_handler(uint8_t *cmd, int32_t len)
 STR_CMD_FUNCTION get_str_cmd_handler(uint8_t *cmd, int32_t len)
 {
 	uint8_t ucIdx = 0;
-	uint32_t ret = WLAN_STATUS_FAILURE;
+	uint32_t ret;
 	int8_t *pcCmd;
 	int32_t i4CmdSize;
+	uint32_t cmdLen;
 
 	for (ucIdx = 0; ucIdx < sizeof(str_cmd_handlers) / sizeof(struct
 				STR_CMD_HANDLER); ucIdx++) {
-		if (len >= strlen(str_cmd_handlers[ucIdx].pcCmdStr) &&
+		cmdLen = strlen(str_cmd_handlers[ucIdx].pcCmdStr);
+		if (len >= cmdLen &&
 			strnicmp(cmd, str_cmd_handlers[ucIdx].pcCmdStr,
-			    strlen(str_cmd_handlers[ucIdx].pcCmdStr)) == 0) {
+			    cmdLen) == 0) {
+			/* skip the pcCmdStr without cmd postfix, except
+			 * '\0' for cmd without param
+			 */
+			if (cmd[cmdLen] != '\0' && cmd[cmdLen] != ' ' &&
+			    cmd[cmdLen] != '=')
+				continue;
 
 			/* len is exact str len, add one for null-terminated */
 			i4CmdSize = len + 1;
@@ -1980,6 +2055,7 @@ STR_CMD_FUNCTION get_str_cmd_handler(uint8_t *cmd, int32_t len)
 			}
 			kalMemZero(pcCmd, i4CmdSize);
 			kalMemCopy(pcCmd, cmd, len);
+			pcCmd[len] = '\0';
 
 			DBGLOG(REQ, LOUD,
 				"vendor str command is [%s], argPolicy[%d] argNum[%d] u4PolicySize[%d]\n",

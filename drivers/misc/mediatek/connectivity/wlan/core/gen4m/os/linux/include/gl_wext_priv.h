@@ -428,11 +428,6 @@ priv_get_int(IN struct net_device *prNetDev,
 	     IN union iwreq_data *prIwReqData, IN OUT char *pcExtra);
 
 int
-priv_set_ints(IN struct net_device *prNetDev,
-	      IN struct iw_request_info *prIwReqInfo,
-	      IN union iwreq_data *prIwReqData, IN char *pcExtra);
-
-int
 priv_get_ints(IN struct net_device *prNetDev,
 	      IN struct iw_request_info *prIwReqInfo,
 	      IN union iwreq_data *prIwReqData, IN OUT char *pcExtra);
@@ -557,8 +552,6 @@ int priv_driver_set_test_cmd(struct net_device *prNetDev, char *pcCommand,
 	int i4TotalLen);
 int priv_driver_get_test_result(struct net_device *prNetDev, char *pcCommand,
 	int i4TotalLen);
-int priv_driver_get_sta_stat2(struct net_device *prNetDev, char *pcCommand,
-	int i4TotalLen);
 int priv_driver_get_sta_stat(struct net_device *prNetDev, char *pcCommand,
 	int i4TotalLen);
 int priv_driver_show_rx_stat(struct net_device *prNetDev, char *pcCommand,
@@ -630,10 +623,6 @@ int priv_driver_get_rx_statistics(struct net_device *prNetDev, char *pcCommand,
 	int i4TotalLen);
 #endif
 #if CFG_SUPPORT_MSP
-#if 0
-int priv_driver_get_stat(struct net_device *prNetDev, char *pcCommand,
-	int i4TotalLen);
-#endif
 int priv_driver_get_sta_statistics(struct net_device *prNetDev, char *pcCommand,
 	int i4TotalLen);
 int priv_driver_get_bss_statistics(struct net_device *prNetDev, char *pcCommand,
@@ -690,8 +679,6 @@ int priv_driver_cccr_ops(struct net_device *prNetDev, char *pcCommand,
 	int i4TotalLen);
 #endif /* _HIF_SDIO && (MTK_WCN_HIF_SDIO == 0) */
 #if CFG_SUPPORT_ADVANCE_CONTROL
-int priv_driver_set_noise(struct net_device *prNetDev, char *pcCommand,
-	int i4TotalLen);
 int priv_driver_get_noise(struct net_device *prNetDev, char *pcCommand,
 	int i4TotalLen);
 int priv_driver_set_pop(struct net_device *prNetDev, char *pcCommand,
@@ -737,8 +724,6 @@ int priv_driver_show_txd_info(struct net_device *prNetDev, char *pcCommand,
 	int i4TotalLen);
 int priv_driver_run_hqa(struct net_device *prNetDev, char *pcCommand,
 	int i4TotalLen);
-int priv_driver_calibration(struct net_device *prNetDev, char *pcCommand,
-	int i4TotalLen);
 int priv_driver_set_sta1ss(struct net_device *prNetDev, char *pcCommand,
 	int i4TotalLen);
 int priv_driver_set_nvram(struct net_device *prNetDev, char *pcCommand,
@@ -762,34 +747,6 @@ int priv_driver_thermal_protect_duty_cfg(struct net_device *prNetDev, char *pcCo
 	int i4TotalLen);
 int priv_driver_thermal_protect_state_act(struct net_device *prNetDev, char *pcCommand,
 	int i4TotalLen);
-#endif
-int priv_driver_set_multista_use_case(struct net_device *prNetDev, char *pcCommand,
-	int i4TotalLen);
-#if CFG_SUPPORT_WIFI_SYSDVT
-int priv_driver_txs_test(struct net_device *prNetDev, char *pcCommand,
-	int i4TotalLen);
-int priv_driver_txs_test_result(struct net_device *prNetDev, char *pcCommand,
-	int i4TotalLen);
-int priv_driver_rxv_test(struct net_device *prNetDev, char *pcCommand,
-	int i4TotalLen);
-int priv_driver_rxv_test_result(struct net_device *prNetDev, char *pcCommand,
-	int i4TotalLen);
-#if CFG_TCP_IP_CHKSUM_OFFLOAD
-int priv_driver_cso_test(struct net_device *prNetDev, char *pcCommand,
-	int i4TotalLen);
-#endif
-int priv_driver_set_tx_test_ac(struct net_device *prNetDev, char *pcCommand,
-	int i4TotalLen);
-int priv_driver_set_tx_test(struct net_device *prNetDev, char *pcCommand,
-	int i4TotalLen);
-int priv_driver_skip_legal_ch_check(struct net_device *prNetDev, char *pcCommand,
-	int i4TotalLen);
-#if (CFG_SUPPORT_DMASHDL_SYSDVT)
-int priv_driver_show_dmashdl_allcr(struct net_device *prNetDev, char *pcCommand,
-	int i4TotalLen);
-int priv_driver_dmashdl_dvt_item(struct net_device *prNetDev, char *pcCommand,
-	int i4TotalLen);
-#endif
 #endif
 int priv_driver_set_bf(struct net_device *prNetDev, char *pcCommand,
 	int i4TotalLen);
@@ -845,5 +802,28 @@ int priv_driver_set_rst_hang(struct net_device *prNetDev, char *pcCommand,
 int priv_driver_set_twtparams(struct net_device *prNetDev, char *pcCommand,
 	int i4TotalLen);
 #endif
+
+int priv_driver_show_tr_info(struct net_device *prNetDev, char *pcCommand,
+	int i4TotalLen);
+int priv_driver_show_ple_info(struct net_device *prNetDev, char *pcCommand,
+	int i4TotalLen);
+int priv_driver_show_pse_info(struct net_device *prNetDev, char *pcCommand,
+	int i4TotalLen);
+int priv_driver_show_csr_info(struct net_device *prNetDev, char *pcCommand,
+	int i4TotalLen);
+int priv_driver_show_dmasch_info(struct net_device *prNetDev, char *pcCommand,
+	int i4TotalLen);
+#if CFG_SUPPORT_EASY_DEBUG
+int priv_driver_fw_param(struct net_device *prNetDev, char *pcCommand,
+	int i4TotalLen);
+#endif
+int priv_driver_tspec_operation(struct net_device *prNetDev, char *pcCommand,
+	int i4TotalLen);
+int priv_driver_it_operation(struct net_device *prNetDev, char *pcCommand,
+	int i4TotalLen);
+int priv_driver_fw_event(struct net_device *prNetDev, char *pcCommand,
+	int i4TotalLen);
+int priv_driver_uapsd(struct net_device *prNetDev, char *pcCommand,
+	int i4TotalLen);
 
 #endif /* _GL_WEXT_PRIV_H */
