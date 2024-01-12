@@ -1662,6 +1662,18 @@
 
 #define CFG_SUPPORT_LIMITED_PKT_PID  1
 
+/*------------------------------------------------------------------------------
+ * Stat CMD will have different format due to different algorithm support
+ *------------------------------------------------------------------------------
+ */
+#if (defined(MT6632) || defined(MT7668))
+#define CFG_SUPPORT_RA_GEN			0
+#define CFG_SUPPORT_TXPOWER_INFO		0
+#else
+#define CFG_SUPPORT_RA_GEN			1
+#define CFG_SUPPORT_TXPOWER_INFO		1
+#endif
+
 /*******************************************************************************
  *                             D A T A   T Y P E S
  *******************************************************************************
