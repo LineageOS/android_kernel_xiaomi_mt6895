@@ -552,7 +552,8 @@ int mtk_cfg80211_vendor_string_cmd(struct wiphy *wiphy,
 	attr = (struct nlattr *)data;
 	nla_strlcpy(cmd, attr, sizeof(cmd));
 
-	return mtk_cfg80211_process_str_cmd(wiphy, wdev, cmd, data_len);
+	return mtk_cfg80211_process_str_cmd(wiphy, wdev, cmd,
+		(data_len > strlen(cmd)) ? strlen(cmd) : data_len);
 }
 
 /* Size (in bytes) of the various private data types */
