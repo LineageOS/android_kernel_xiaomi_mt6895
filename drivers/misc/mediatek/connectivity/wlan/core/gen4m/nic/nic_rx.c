@@ -174,9 +174,6 @@ static struct RX_EVENT_HANDLER arEventTable[] = {
 #endif
 	{EVENT_ID_RSSI_MONITOR, nicEventRssiMonitor},
 	{EVENT_ID_DUMP_MEM, nicEventDumpMem},
-#if CFG_SUPPORT_CAL_RESULT_BACKUP_TO_HOST
-	{EVENT_ID_CAL_ALL_DONE, nicEventCalAllDone},
-#endif
 #if CFG_SUPPORT_BAR_DELAY_INDICATION
 	{EVENT_ID_RXM_DELAY_BAR, nicEventHandleDelayBar},
 #endif

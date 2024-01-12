@@ -201,32 +201,6 @@ extern uint32_t g_au4IQData[256];
  *                             D A T A   T Y P E S
  *******************************************************************************
  */
-#if CFG_SUPPORT_CAL_RESULT_BACKUP_TO_HOST
-struct RLM_CAL_RESULT_ALL_V2 {
-	/* Used for checking the Cal Data is damaged */
-	uint32_t u4MagicNum1;
-
-	/* Thermal Value when do these Calibration */
-	uint32_t u4ThermalInfo;
-
-	/* Total Rom Data Length Backup in Host Side */
-	uint32_t u4ValidRomCalDataLength;
-
-	/* Total Ram Data Length Backup in Host Side */
-	uint32_t u4ValidRamCalDataLength;
-
-	/* All Rom Cal Data Dumpped by FW */
-	uint32_t au4RomCalData[10000];
-
-	/* All Ram Cal Data Dumpped by FW */
-	uint32_t au4RamCalData[10000];
-
-	/* Used for checking the Cal Data is damaged */
-	uint32_t u4MagicNum2;
-};
-extern struct RLM_CAL_RESULT_ALL_V2 g_rBackupCalDataAllV2;
-#endif
-
 typedef void (*PFN_OPMODE_NOTIFY_DONE_FUNC)(
 	struct ADAPTER *, uint8_t, bool);
 
@@ -518,20 +492,6 @@ void
 rlmDummyChangeOpHandler(struct ADAPTER *prAdapter,
 	uint8_t ucBssIndex, bool fgIsChangeSuccess);
 
-
-#if CFG_SUPPORT_CAL_RESULT_BACKUP_TO_HOST
-uint32_t rlmCalBackup(
-	struct ADAPTER *prAdapter,
-	uint8_t		ucReason,
-	uint8_t		ucAction,
-	uint8_t		ucRomRam
-);
-
-uint32_t rlmTriggerCalBackup(
-	struct ADAPTER *prAdapter,
-	u_int8_t		fgIsCalDataBackuped
-);
-#endif
 
 void rlmModifyVhtBwPara(uint8_t *pucVhtChannelFrequencyS1,
 			uint8_t *pucVhtChannelFrequencyS2,

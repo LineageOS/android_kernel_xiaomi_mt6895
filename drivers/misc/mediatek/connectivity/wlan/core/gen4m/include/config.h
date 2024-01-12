@@ -1286,21 +1286,6 @@
 #define CFG_SUPPORT_SPE_IDX_CONTROL		1
 
 /*------------------------------------------------------------------------------
- * Flags for a Goal for MT6632 : Cal Result Backup in Host or NVRam when Android
- *                               Boot
- *------------------------------------------------------------------------------
- */
-#if 0 /*(MTK_WCN_HIF_SDIO) : 20161003 Default Off, later will enable
-       *                     by MTK_WCN_HIF_SDIO
-       */
-#define CFG_SUPPORT_CAL_RESULT_BACKUP_TO_HOST				1
-#define CFG_SUPPORT_CAL_RESULT_BACKUP_TO_HOST_DBGLOG		0
-#else
-#define CFG_SUPPORT_CAL_RESULT_BACKUP_TO_HOST				0
-#define CFG_SUPPORT_CAL_RESULT_BACKUP_TO_HOST_DBGLOG		0
-#endif
-
-/*------------------------------------------------------------------------------
  * Enable SDIO 1-bit Data Mode. (Usually debug only)
  *------------------------------------------------------------------------------
  */

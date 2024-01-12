@@ -1319,34 +1319,6 @@ struct CMD_ACCESS_REG {
 	uint32_t u4Data;
 };
 
-#if CFG_SUPPORT_CAL_RESULT_BACKUP_TO_HOST
-/* CMD_ID_CAL_BACKUP_IN_HOST_V2 & EVENT_ID_CAL_BACKUP_IN_HOST_V2 */
-struct CMD_CAL_BACKUP_STRUCT_V2 {
-	uint8_t	ucReason;
-	uint8_t	ucAction;
-	uint8_t	ucNeedResp;
-	uint8_t	ucFragNum;
-	uint8_t	ucRomRam;
-	uint32_t	u4ThermalValue;
-	uint32_t u4Address;
-	uint32_t	u4Length;
-	uint32_t	u4RemainLength;
-	uint32_t	au4Buffer[PARAM_CAL_DATA_DUMP_MAX_NUM];
-};
-
-struct CMD_CAL_BACKUP_STRUCT {
-	uint8_t	ucReason;
-	uint8_t	ucAction;
-	uint8_t	ucNeedResp;
-	uint8_t	ucFragNum;
-	uint8_t	ucRomRam;
-	uint32_t	u4ThermalValue;
-	uint32_t u4Address;
-	uint32_t	u4Length;
-	uint32_t	u4RemainLength;
-};
-#endif
-
 struct CMD_ACCESS_CHN_LOAD {
 	uint32_t u4Address;
 	uint32_t u4Data;
@@ -3353,12 +3325,6 @@ void nicCmdEventGetCalcInitMcs(IN struct ADAPTER *prAdapter,
 #endif /* CFG_SUPPORT_MU_MIMO */
 #endif /* CFG_SUPPORT_QA_TOOL */
 
-#if CFG_SUPPORT_CAL_RESULT_BACKUP_TO_HOST
-void nicCmdEventQueryCalBackupV2(IN struct ADAPTER
-				 *prAdapter, IN struct CMD_INFO *prCmdInfo,
-				 IN uint8_t *pucEventBuf);
-#endif
-
 void nicCmdEventQuerySwCtrlRead(IN struct ADAPTER
 				*prAdapter, IN struct CMD_INFO *prCmdInfo,
 				IN uint8_t *pucEventBuf);
@@ -3588,10 +3554,6 @@ void nicEventUpdateBcmDebug(IN struct ADAPTER *prAdapter,
 			    IN struct WIFI_EVENT *prEvent);
 void nicEventAddPkeyDone(IN struct ADAPTER *prAdapter,
 			 IN struct WIFI_EVENT *prEvent);
-#if CFG_SUPPORT_CAL_RESULT_BACKUP_TO_HOST
-void nicEventCalAllDone(IN struct ADAPTER *prAdapter,
-			IN struct WIFI_EVENT *prEvent);
-#endif
 
 void nicEventDebugMsg(IN struct ADAPTER *prAdapter,
 		      IN struct WIFI_EVENT *prEvent);
