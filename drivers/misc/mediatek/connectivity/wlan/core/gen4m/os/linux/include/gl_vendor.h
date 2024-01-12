@@ -89,6 +89,7 @@
 #define OUI_QCA 0x001374
 #define OUI_MTK 0x000CE7
 
+/* QCA-OUI subcmds */
 #define NL80211_VENDOR_SUBCMD_GET_PREFER_FREQ_LIST 103
 #define NL80211_VENDOR_SUBCMD_ACS 54
 #define NL80211_VENDOR_SUBCMD_DFS_OFFLOAD_CAC_STARTED 56
@@ -101,14 +102,13 @@
 #define QCA_NL80211_VENDOR_SUBCMD_ROAMING 9
 #define QCA_NL80211_VENDOR_SUBCMD_ROAM 64
 #define QCA_NL80211_VENDOR_SUBCMD_SETBAND 105
-#define NL80211_VENDOR_SUBCMD_NAN 12
 #define NL80211_VENDOR_SUBCMD_GET_APF_CAPABILITIES 14
 #define NL80211_VENDOR_SUBCMD_SET_PACKET_FILTER 15
 #define NL80211_VENDOR_SUBCMD_READ_PACKET_FILTER 16
-#define NL80211_VENDOR_SUBCMD_NDP 81
 #define NL80211_VENDOR_SUBCMD_GET_TRX_STATS 48
 #define MTK_NL80211_OP_MODE_CHANGE 14
 #define MTK_NL80211_TRIGGER_RESET 15
+/* End of QCA-OUI subcmds */
 
 #define WIFI_VENDOR_ATTR_FEATURE_FLAGS 7
 #define WIFI_VENDOR_DATA_OP_MODE_CHANGE(bssIdx, channelBw, TxNss, RxNss) \
@@ -201,8 +201,13 @@ enum WIFI_OFFLOAD_SUB_COMMAND {
 	WIFI_OFFLOAD_STOP_MKEEP_ALIVE,
 };
 
+/* MTK subcmds should be here */
 enum MTK_WIFI_VENDOR_SUB_COMMAND {
 	WIFI_SUBCMD_TRIGGER_RESET = 1,
+	MTK_SUBCMD_NAN = 12,
+	MTK_SUBCMD_NDP = 81,
+
+	MTK_SUBCMD_STRING_CMD = 0x2454,
 };
 
 enum WIFI_VENDOR_EVENT {
@@ -279,6 +284,12 @@ enum LOGGER_ATTRIBUTE {
 	LOGGER_ATTRIBUTE_DRIVER_VER = 1,
 	LOGGER_ATTRIBUTE_FW_VER     = 2,
 	LOGGER_ATTRIBUTE_MAX	    = 3
+};
+
+enum STRING_ATTRIBUTE {
+	STRING_ATTRIBUTE_INVALID = 0,
+	STRING_ATTRIBUTE_DATA    = 1,
+	STRING_ATTRIBUTE_MAX     = 2
 };
 
 enum RTT_ATTRIBUTE {
@@ -500,6 +511,10 @@ extern const struct nla_policy qca_wlan_vendor_attr_policy[
 		QCA_WLAN_VENDOR_ATTR_MAX + 1];
 extern const struct nla_policy nla_get_version_policy[
 		LOGGER_ATTRIBUTE_MAX + 1];
+
+extern const struct nla_policy nla_string_cmd_policy[
+		STRING_ATTRIBUTE_MAX + 1];
+
 extern const struct nla_policy nla_parse_offloading_policy[
 		MKEEP_ALIVE_ATTRIBUTE_PERIOD_MSEC + 1];
 extern const struct nla_policy nla_get_preferred_freq_list_policy[
@@ -1240,4 +1255,8 @@ int mtk_cfg80211_vendor_trigger_reset(
 
 int mtk_cfg80211_vendor_event_reset_triggered(
 	uint32_t data);
+
+int mtk_cfg80211_vendor_string_cmd(struct wiphy *wiphy,
+	struct wireless_dev *wdev, const void *data, int data_len);
+
 #endif /* _GL_VENDOR_H */

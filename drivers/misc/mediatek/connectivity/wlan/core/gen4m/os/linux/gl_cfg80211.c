@@ -4865,7 +4865,6 @@ int mtk_cfg80211_tdls_oper(struct wiphy *wiphy,
 #endif
 #endif
 
-#ifdef CONFIG_NL80211_TESTMODE
 #if CFG_SUPPORT_NCHO
 /* NCHO related command definition. Setting by supplicant */
 #define CMD_NCHO_ROAM_TRIGGER_GET		"GETROAMTRIGGER"
@@ -5668,7 +5667,7 @@ int32_t mtk_cfg80211_process_str_cmd_reply(
 	struct sk_buff *skb;
 	int32_t i4Err = 0;
 
-	skb = cfg80211_testmode_alloc_reply_skb(wiphy, len);
+	skb = cfg80211_vendor_cmd_alloc_reply_skb(wiphy, len);
 
 	if (!skb) {
 		DBGLOG(REQ, INFO, "%s allocate skb failed\n", __func__);
@@ -5681,34 +5680,23 @@ int32_t mtk_cfg80211_process_str_cmd_reply(
 		return i4Err;
 	}
 
-	return cfg80211_testmode_reply(skb);
+	return cfg80211_vendor_cmd_reply(skb);
 }
 
 int32_t mtk_cfg80211_process_str_cmd(IN struct wiphy *wiphy,
-		struct wireless_dev *wdev,
-		uint8_t *data, int32_t len)
+		struct wireless_dev *wdev, uint8_t *data, int32_t len)
 {
 	uint32_t rStatus = WLAN_STATUS_SUCCESS;
 	uint32_t u4SetInfoLen = 0;
 	uint8_t ucBssIndex = 0;
-	struct NL80211_DRIVER_STRING_CMD_PARAMS *param;
-	uint8_t *cmd;
+	uint8_t *cmd = data;
 	struct GLUE_INFO *prGlueInfo = NULL;
 
 	WIPHY_PRIV(wiphy, prGlueInfo);
 
-	if (len <= sizeof(struct NL80211_DRIVER_STRING_CMD_PARAMS)) {
-		DBGLOG(REQ, ERROR, "len [%d] is invalid!\n", len);
-		return -EINVAL;
-	}
-
 	ucBssIndex = wlanGetBssIdx(wdev->netdev);
 	if (!IS_BSS_INDEX_VALID(ucBssIndex))
 		return -EINVAL;
-
-	param = (struct NL80211_DRIVER_STRING_CMD_PARAMS *) data;
-	cmd = (uint8_t *) (param + 1);
-	len -= sizeof(struct NL80211_DRIVER_STRING_CMD_PARAMS);
 
 	DBGLOG(REQ, INFO, "cmd: %s\n", cmd);
 
@@ -5866,8 +5854,6 @@ int32_t mtk_cfg80211_process_str_cmd(IN struct wiphy *wiphy,
 
 	return rStatus;
 }
-
-#endif /* CONFIG_NL80211_TESTMODE */
 
 #if (CFG_SUPPORT_SINGLE_SKU == 1)
 
