@@ -307,7 +307,8 @@ struct CMD_VALIDATE_POLICY fw_event_policy[COMMON_CMD_SET_ARG_NUM(2)] = {
 	[COMMON_CMD_ATTR_IDX(1)] = {.type = NLA_STRING, .len = 7}
 };
 
-struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
+/* Available in user load, should be no security problem */
+struct PRIV_CMD_HANDLER priv_cmd_handlers_customer[] = {
 	{
 		.pcCmdStr  = CMD_MIRACAST,
 		.pfHandler = priv_driver_set_miracast,
@@ -570,11 +571,29 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.policy    = tspec_operation_policy,
 		.u4PolicySize = ARRAY_SIZE(tspec_operation_policy)
 	},
-/*---------------------------------------------------------------------------
- *  debug only
- *---------------------------------------------------------------------------
- */
+	{
+		.pcCmdStr  = CMD_SET_FIXED_RATE,
+		.pfHandler = priv_driver_set_fixed_rate,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+#if (CFG_SUPPORT_DFS_MASTER == 1)
+	{
+		.pcCmdStr  = CMD_SHOW_DFS_CAC_TIME,
+		.pfHandler = priv_driver_show_dfs_cac_time,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+#endif
+};
+
+/* Debug only, unavailable in user load */
 #if BUILD_QA_DBG
+struct PRIV_CMD_HANDLER priv_cmd_handlers_debug[] = {
 	{
 		.pcCmdStr  = CMD_AP_START,
 		.pfHandler = priv_driver_set_ap_start,
@@ -678,14 +697,6 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 	{
 		.pcCmdStr  = CMD_TX_POWER_MANUAL_SET,
 		.pfHandler = priv_driver_txpower_man_set,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(1),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-	{
-		.pcCmdStr  = CMD_SET_FIXED_RATE,
-		.pfHandler = priv_driver_set_fixed_rate,
 		.argPolicy = VERIFY_EXACT_ARG_NUM,
 		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(1),
 		.policy    = NULL,
@@ -843,14 +854,6 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 	{
 		.pcCmdStr  = CMD_SHOW_DFS_HELP,
 		.pfHandler = priv_driver_show_dfs_help,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-	{
-		.pcCmdStr  = CMD_SHOW_DFS_CAC_TIME,
-		.pfHandler = priv_driver_show_dfs_cac_time,
 		.argPolicy = VERIFY_EXACT_ARG_NUM,
 		.ucArgNum  = COMMON_CMD_GET_ARG_NUM(1),
 		.policy    = NULL,
@@ -1605,10 +1608,11 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers[] = {
 		.policy    = NULL,
 		.u4PolicySize = 0
 	},
-#endif /* BUILD_QA_DBG */
 };
+#endif /* BUILD_QA_DBG */
 
-struct STR_CMD_HANDLER str_cmd_handlers[] = {
+/* Available in user load, should be no security problem */
+struct STR_CMD_HANDLER str_cmd_handlers_customer[] = {
 	{
 		.pcCmdStr  = CMD_TDLS_PS,
 		.pfHandler = testmode_disable_tdls_ps,
@@ -1617,26 +1621,6 @@ struct STR_CMD_HANDLER str_cmd_handlers[] = {
 		.policy    = u8_policy,
 		.u4PolicySize = ARRAY_SIZE(u8_policy)
 	},
-#if BUILD_QA_DBG
-	{
-		.pcCmdStr  = CMD_NEIGHBOR_REQUEST,
-		.pfHandler = testmode_neighbor_request,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-#endif /* BUILD_QA_DBG */
-#if BUILD_QA_DBG
-	{
-		.pcCmdStr  = CMD_BSS_TRAN_QUERY,
-		.pfHandler = testmode_bss_tran_query,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = NULL,
-		.u4PolicySize = 0
-	},
-#endif /* BUILD_QA_DBG */
 	{
 		.pcCmdStr  = CMD_OSHARE,
 		.pfHandler = testmode_osharemod,
@@ -1834,6 +1818,28 @@ struct STR_CMD_HANDLER str_cmd_handlers[] = {
  */
 };
 
+/* Debug only, unavailable in user load */
+#if BUILD_QA_DBG
+struct STR_CMD_HANDLER str_cmd_handlers_debug[] = {
+	{
+		.pcCmdStr  = CMD_NEIGHBOR_REQUEST,
+		.pfHandler = testmode_neighbor_request,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+	{
+		.pcCmdStr  = CMD_BSS_TRAN_QUERY,
+		.pfHandler = testmode_bss_tran_query,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
+		.policy    = NULL,
+		.u4PolicySize = 0
+	},
+};
+#endif /* BUILD_QA_DBG */
+
 /*******************************************************************************
  *                   F U N C T I O N   D E C L A R A T I O N S
  *******************************************************************************
@@ -1941,6 +1947,21 @@ uint8_t cmd_validate(int8_t *pcCmd, enum ARG_NUM_POLICY argPolicy,
 	return ret;
 }
 
+static u_int8_t is_user_cmd_ended(uint8_t *cmd, uint32_t cmdLen)
+{
+	/* only return TRUE if the cmd user typed is ended
+	 * '\0' for cmd without argument,
+	 * '\n' for proc node,
+	 * ' '  for cmd with argument,
+	 * '='  for cmd like fixedrate=x-x-x-x-...
+	 */
+	if (cmd[cmdLen] == '\0' || cmd[cmdLen] == '\n' ||
+	    cmd[cmdLen] == ' ' || cmd[cmdLen] == '=')
+		return TRUE;
+
+	return FALSE;
+}
+
 /*----------------------------------------------------------------------------*/
 /*!
  * @brief This routine is used to find Mediatek ioctl private command handler,
@@ -1959,56 +1980,80 @@ PRIV_CMD_FUNCTION get_priv_cmd_handler(uint8_t *cmd, int32_t len)
 	uint32_t ret;
 	int8_t *pcCmd;
 	int32_t i4CmdSize;
-	uint32_t cmdLen;
+	uint32_t privCmdLen;
+	struct PRIV_CMD_HANDLER *prPrivCmdHandler = NULL;
+	u_int8_t fgIsFound = FALSE;
 
-	for (ucIdx = 0; ucIdx < sizeof(priv_cmd_handlers) / sizeof(struct
-				PRIV_CMD_HANDLER); ucIdx++) {
-		cmdLen = strlen(priv_cmd_handlers[ucIdx].pcCmdStr);
-		if (len >= cmdLen &&
-			strnicmp(cmd, priv_cmd_handlers[ucIdx].pcCmdStr,
-			     cmdLen) == 0) {
-			/* skip the pcCmdStr without cmd postfix, except
-			 * '\0' for cmd without param, '\n' for proc node
-			 */
-			if (cmd[cmdLen] != '\0' && cmd[cmdLen] != '\n' &&
-				cmd[cmdLen] != ' ' && cmd[cmdLen] != '=')
+	for (ucIdx = 0; ucIdx < ARRAY_SIZE(priv_cmd_handlers_customer);
+	     ucIdx++) {
+		prPrivCmdHandler = &priv_cmd_handlers_customer[ucIdx];
+		privCmdLen = strlen(prPrivCmdHandler->pcCmdStr);
+		if (len >= privCmdLen &&
+		    strnicmp(cmd, prPrivCmdHandler->pcCmdStr,
+			     privCmdLen) == 0) {
+			if (!is_user_cmd_ended(cmd, privCmdLen))
 				continue;
 
-			/* add one for null-terminated */
-			i4CmdSize = len + 1;
-			pcCmd = (int8_t *) kalMemAlloc(i4CmdSize, VIR_MEM_TYPE);
-			if (!pcCmd) {
-				DBGLOG(REQ, WARN,
-					"%s, alloc mem failed\n", __func__);
-				return 0;
-			}
-			kalMemZero(pcCmd, i4CmdSize);
-			kalMemCopy(pcCmd, cmd, len);
-			pcCmd[len] = '\0';
-
-			DBGLOG(REQ, LOUD,
-				"ioctl priv command is [%s], argPolicy[%d] argNum[%d] u4PolicySize[%d]\n",
-				pcCmd,
-				priv_cmd_handlers[ucIdx].argPolicy,
-				priv_cmd_handlers[ucIdx].ucArgNum,
-				priv_cmd_handlers[ucIdx].u4PolicySize);
-
-			ret = cmd_validate(pcCmd,
-				priv_cmd_handlers[ucIdx].argPolicy,
-				priv_cmd_handlers[ucIdx].ucArgNum,
-				priv_cmd_handlers[ucIdx].policy,
-				priv_cmd_handlers[ucIdx].u4PolicySize);
-
-			if (pcCmd)
-				kalMemFree(pcCmd, VIR_MEM_TYPE, i4CmdSize);
-
-			if (ret != WLAN_STATUS_SUCCESS) {
-				DBGLOG(REQ, WARN, "Command validate fail\n");
-				return NULL;
-			}
-			return priv_cmd_handlers[ucIdx].pfHandler;
+			fgIsFound = TRUE;
+			goto done;
 		}
 	}
+
+#if BUILD_QA_DBG
+	for (ucIdx = 0; ucIdx < ARRAY_SIZE(priv_cmd_handlers_debug); ucIdx++) {
+		prPrivCmdHandler = &priv_cmd_handlers_debug[ucIdx];
+		privCmdLen = strlen(prPrivCmdHandler->pcCmdStr);
+		if (len >= privCmdLen &&
+		    strnicmp(cmd, prPrivCmdHandler->pcCmdStr,
+			     privCmdLen) == 0) {
+			if (!is_user_cmd_ended(cmd, privCmdLen))
+				continue;
+
+			fgIsFound = TRUE;
+			break;
+		}
+	}
+#endif /* BUILD_QA_DBG */
+
+done:
+	if (fgIsFound && prPrivCmdHandler) {
+		/* add one for null-terminated */
+		i4CmdSize = len + 1;
+		pcCmd = (int8_t *) kalMemAlloc(i4CmdSize, VIR_MEM_TYPE);
+		if (!pcCmd) {
+			DBGLOG(REQ, WARN,
+				"%s, alloc mem failed\n", __func__);
+			return 0;
+		}
+		kalMemZero(pcCmd, i4CmdSize);
+		kalMemCopy(pcCmd, cmd, len);
+		pcCmd[len] = '\0';
+
+		DBGLOG(REQ, TRACE,
+			"ioctl priv command is [%s], argPolicy[%d] argNum[%d] u4PolicySize[%d]\n",
+			pcCmd,
+			prPrivCmdHandler->argPolicy,
+			prPrivCmdHandler->ucArgNum,
+			prPrivCmdHandler->u4PolicySize);
+
+		ret = cmd_validate(pcCmd,
+			prPrivCmdHandler->argPolicy,
+			prPrivCmdHandler->ucArgNum,
+			prPrivCmdHandler->policy,
+			prPrivCmdHandler->u4PolicySize);
+
+		if (pcCmd)
+			kalMemFree(pcCmd, VIR_MEM_TYPE, i4CmdSize);
+
+		if (ret != WLAN_STATUS_SUCCESS) {
+			DBGLOG(REQ, WARN, "Command validate fail\n");
+			return NULL;
+		}
+		return prPrivCmdHandler->pfHandler;
+	}
+
+	DBGLOG(REQ, WARN, "No matching priv cmd found");
+
 	return NULL;
 }
 
@@ -2030,55 +2075,79 @@ STR_CMD_FUNCTION get_str_cmd_handler(uint8_t *cmd, int32_t len)
 	uint32_t ret;
 	int8_t *pcCmd;
 	int32_t i4CmdSize;
-	uint32_t cmdLen;
+	uint32_t strCmdLen;
+	struct STR_CMD_HANDLER *prStrCmdHandler = NULL;
+	u_int8_t fgIsFound = FALSE;
 
-	for (ucIdx = 0; ucIdx < sizeof(str_cmd_handlers) / sizeof(struct
-				STR_CMD_HANDLER); ucIdx++) {
-		cmdLen = strlen(str_cmd_handlers[ucIdx].pcCmdStr);
-		if (len >= cmdLen &&
-			strnicmp(cmd, str_cmd_handlers[ucIdx].pcCmdStr,
-			    cmdLen) == 0) {
-			/* skip the pcCmdStr without cmd postfix, except
-			 * '\0' for cmd without param
-			 */
-			if (cmd[cmdLen] != '\0' && cmd[cmdLen] != ' ' &&
-			    cmd[cmdLen] != '=')
+	for (ucIdx = 0; ucIdx < ARRAY_SIZE(str_cmd_handlers_customer);
+	     ucIdx++) {
+		prStrCmdHandler = &str_cmd_handlers_customer[ucIdx];
+		strCmdLen = strlen(prStrCmdHandler->pcCmdStr);
+		if (len >= strCmdLen &&
+			strnicmp(cmd, prStrCmdHandler->pcCmdStr,
+			    strCmdLen) == 0) {
+			if (!is_user_cmd_ended(cmd, strCmdLen))
 				continue;
 
-			/* len is exact str len, add one for null-terminated */
-			i4CmdSize = len + 1;
-			pcCmd = (int8_t *) kalMemAlloc(i4CmdSize, VIR_MEM_TYPE);
-			if (!pcCmd) {
-				DBGLOG(REQ, WARN,
-					"%s, alloc mem failed\n", __func__);
-				return 0;
-			}
-			kalMemZero(pcCmd, i4CmdSize);
-			kalMemCopy(pcCmd, cmd, len);
-			pcCmd[len] = '\0';
-
-			DBGLOG(REQ, LOUD,
-				"vendor str command is [%s], argPolicy[%d] argNum[%d] u4PolicySize[%d]\n",
-				pcCmd,
-				str_cmd_handlers[ucIdx].argPolicy,
-				str_cmd_handlers[ucIdx].ucArgNum,
-				str_cmd_handlers[ucIdx].u4PolicySize);
-
-			ret = cmd_validate(pcCmd,
-				str_cmd_handlers[ucIdx].argPolicy,
-				str_cmd_handlers[ucIdx].ucArgNum,
-				str_cmd_handlers[ucIdx].policy,
-				str_cmd_handlers[ucIdx].u4PolicySize);
-
-			if (pcCmd)
-				kalMemFree(pcCmd, VIR_MEM_TYPE, i4CmdSize);
-
-			if (ret != WLAN_STATUS_SUCCESS) {
-				DBGLOG(REQ, WARN, "Command validate fail\n");
-				return NULL;
-			}
-			return str_cmd_handlers[ucIdx].pfHandler;
+			fgIsFound = TRUE;
+			goto done;
 		}
 	}
+
+#if BUILD_QA_DBG
+	for (ucIdx = 0; ucIdx < ARRAY_SIZE(str_cmd_handlers_debug); ucIdx++) {
+		prStrCmdHandler = &str_cmd_handlers_debug[ucIdx];
+		strCmdLen = strlen(prStrCmdHandler->pcCmdStr);
+		if (len >= strCmdLen &&
+			strnicmp(cmd, prStrCmdHandler->pcCmdStr,
+			     strCmdLen) == 0) {
+			if (!is_user_cmd_ended(cmd, strCmdLen))
+				continue;
+
+			fgIsFound = TRUE;
+			break;
+		}
+	}
+#endif /* BUILD_QA_DBG */
+
+done:
+	if (fgIsFound && prStrCmdHandler) {
+		/* len is exact str len, add one for null-terminated */
+		i4CmdSize = len + 1;
+		pcCmd = (int8_t *) kalMemAlloc(i4CmdSize, VIR_MEM_TYPE);
+		if (!pcCmd) {
+			DBGLOG(REQ, WARN,
+				"%s, alloc mem failed\n", __func__);
+			return 0;
+		}
+		kalMemZero(pcCmd, i4CmdSize);
+		kalMemCopy(pcCmd, cmd, len);
+		pcCmd[len] = '\0';
+
+		DBGLOG(REQ, TRACE,
+			"vendor str command is [%s], argPolicy[%d] argNum[%d] u4PolicySize[%d]\n",
+			pcCmd,
+			prStrCmdHandler->argPolicy,
+			prStrCmdHandler->ucArgNum,
+			prStrCmdHandler->u4PolicySize);
+
+		ret = cmd_validate(pcCmd,
+			prStrCmdHandler->argPolicy,
+			prStrCmdHandler->ucArgNum,
+			prStrCmdHandler->policy,
+			prStrCmdHandler->u4PolicySize);
+
+		if (pcCmd)
+			kalMemFree(pcCmd, VIR_MEM_TYPE, i4CmdSize);
+
+		if (ret != WLAN_STATUS_SUCCESS) {
+			DBGLOG(REQ, WARN, "Command validate fail\n");
+			return NULL;
+		}
+		return prStrCmdHandler->pfHandler;
+	}
+
+	DBGLOG(REQ, WARN, "No matching str cmd found");
+
 	return NULL;
 }
