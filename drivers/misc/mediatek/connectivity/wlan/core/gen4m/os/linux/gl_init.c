@@ -1306,6 +1306,34 @@ static const struct wiphy_vendor_command
 		.maxattr = STRING_ATTRIBUTE_MAX
 #endif
 	},
+	{
+		{
+			.vendor_id = OUI_MTK,
+			.subcmd = MTK_SUBCMD_IW_CMD
+		},
+		.flags = WIPHY_VENDOR_CMD_NEED_WDEV |
+				WIPHY_VENDOR_CMD_NEED_NETDEV |
+				WIPHY_VENDOR_CMD_NEED_RUNNING,
+		.doit = mtk_cfg80211_vendor_iw_cmd,
+#if KERNEL_VERSION(5, 4, 0) <= CFG80211_VERSION_CODE
+		.policy = VENDOR_CMD_RAW_DATA,
+		.maxattr = STRING_ATTRIBUTE_MAX
+#endif
+	},
+	{
+		{
+			.vendor_id = OUI_MTK,
+			.subcmd = MTK_SUBCMD_IW_CMD_DRIVER
+		},
+		.flags = WIPHY_VENDOR_CMD_NEED_WDEV |
+				WIPHY_VENDOR_CMD_NEED_NETDEV |
+				WIPHY_VENDOR_CMD_NEED_RUNNING,
+		.doit = mtk_cfg80211_vendor_iw_cmd_driver,
+#if KERNEL_VERSION(5, 4, 0) <= CFG80211_VERSION_CODE
+		.policy = VENDOR_CMD_RAW_DATA,
+		.maxattr = STRING_ATTRIBUTE_MAX
+#endif
+	},
 };
 
 static const struct nl80211_vendor_cmd_info

@@ -208,6 +208,8 @@ enum MTK_WIFI_VENDOR_SUB_COMMAND {
 	MTK_SUBCMD_NDP = 81,
 
 	MTK_SUBCMD_STRING_CMD = 0x2454,
+	MTK_SUBCMD_IW_CMD = 0x2455,
+	MTK_SUBCMD_IW_CMD_DRIVER = 0x2456,
 };
 
 enum WIFI_VENDOR_EVENT {
@@ -1257,6 +1259,12 @@ int mtk_cfg80211_vendor_event_reset_triggered(
 	uint32_t data);
 
 int mtk_cfg80211_vendor_string_cmd(struct wiphy *wiphy,
+	struct wireless_dev *wdev, const void *data, int data_len);
+
+int mtk_cfg80211_vendor_iw_cmd(struct wiphy *wiphy,
+	struct wireless_dev *wdev, const void *data, int data_len);
+
+int mtk_cfg80211_vendor_iw_cmd_driver(struct wiphy *wiphy,
 	struct wireless_dev *wdev, const void *data, int data_len);
 
 #endif /* _GL_VENDOR_H */
