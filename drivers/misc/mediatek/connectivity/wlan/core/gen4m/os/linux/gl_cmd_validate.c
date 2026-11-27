@@ -597,6 +597,14 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers_customer[] = {
 		.policy    = set_flag_policy,
 		.u4PolicySize = ARRAY_SIZE(set_flag_policy)
 	},
+	{
+		.pcCmdStr  = CMD_COUNTRY,
+		.pfHandler = priv_driver_set_country,
+		.argPolicy = VERIFY_EXACT_ARG_NUM,
+		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
+		.policy    = set_country_policy,
+		.u4PolicySize = ARRAY_SIZE(set_country_policy)
+	},
 };
 
 /* Debug only, unavailable in user load */
@@ -625,14 +633,6 @@ struct PRIV_CMD_HANDLER priv_cmd_handlers_debug[] = {
 		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
 		.policy    = set_band_policy,
 		.u4PolicySize = ARRAY_SIZE(set_band_policy)
-	},
-	{
-		.pcCmdStr  = CMD_COUNTRY,
-		.pfHandler = priv_driver_set_country,
-		.argPolicy = VERIFY_EXACT_ARG_NUM,
-		.ucArgNum  = COMMON_CMD_SET_ARG_NUM(2),
-		.policy    = set_country_policy,
-		.u4PolicySize = ARRAY_SIZE(set_country_policy)
 	},
 	{
 		.pcCmdStr  = CMD_CSA,
